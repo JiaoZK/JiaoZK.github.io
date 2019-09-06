@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 移动应用的性能性能指标 内存RAM：平均值、泄漏和峰值 耗电量：CPU、硬件(位置等) 初始化时间：mian前和main后 执行速度： 响应速读： 本地存储：更新频率、异常、清除策略 互操作性： 网络环境： 带宽 数据刷新：刷新频率*数据量，流量 多用户支持：切换迅速、数据隔离 单点登录：数据共享和同步 安全：  应用性能分析 采样 埋点  测量 构建和发布：一键打包 可测试性：单元测试、功能">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能的ios应用开发">
+<meta property="og:url" content="http://yoursite.com/2016/10/07/高性能的ios应用开发/index.html">
+<meta property="og:site_name" content="jiao﹢奎">
+<meta property="og:description" content="1 移动应用的性能性能指标 内存RAM：平均值、泄漏和峰值 耗电量：CPU、硬件(位置等) 初始化时间：mian前和main后 执行速度： 响应速读： 本地存储：更新频率、异常、清除策略 互操作性： 网络环境： 带宽 数据刷新：刷新频率*数据量，流量 多用户支持：切换迅速、数据隔离 单点登录：数据共享和同步 安全：  应用性能分析 采样 埋点  测量 构建和发布：一键打包 可测试性：单元测试、功能">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-03T17:49:21.041Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能的ios应用开发">
+<meta name="twitter:description" content="1 移动应用的性能性能指标 内存RAM：平均值、泄漏和峰值 耗电量：CPU、硬件(位置等) 初始化时间：mian前和main后 执行速度： 响应速读： 本地存储：更新频率、异常、清除策略 互操作性： 网络环境： 带宽 数据刷新：刷新频率*数据量，流量 多用户支持：切换迅速、数据隔离 单点登录：数据共享和同步 安全：  应用性能分析 采样 埋点  测量 构建和发布：一键打包 可测试性：单元测试、功能">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/07/高性能的ios应用开发/">
+
+
+
+
+
+  <title>高性能的ios应用开发 | jiao﹢奎</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jiao﹢奎</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/10/07/高性能的ios应用开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="焦正奎">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jiao﹢奎">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">高性能的ios应用开发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-07T18:14:18+08:00">
+                2016-10-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-移动应用的性能"><a href="#1-移动应用的性能" class="headerlink" title="1 移动应用的性能"></a>1 移动应用的性能</h1><h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><ol>
+<li>内存RAM：平均值、泄漏和峰值</li>
+<li>耗电量：CPU、硬件(位置等)</li>
+<li>初始化时间：mian前和main后</li>
+<li>执行速度：</li>
+<li>响应速读：</li>
+<li>本地存储：更新频率、异常、清除策略</li>
+<li>互操作性：</li>
+<li>网络环境：</li>
+<li>带宽</li>
+<li>数据刷新：刷新频率*数据量，流量</li>
+<li>多用户支持：切换迅速、数据隔离</li>
+<li>单点登录：数据共享和同步</li>
+<li>安全：</li>
+</ol>
+<h2 id="应用性能分析"><a href="#应用性能分析" class="headerlink" title="应用性能分析"></a>应用性能分析</h2><ol>
+<li>采样</li>
+<li>埋点</li>
+</ol>
+<h2 id="测量"><a href="#测量" class="headerlink" title="测量"></a>测量</h2><ol>
+<li>构建和发布：一键打包</li>
+<li>可测试性：单元测试、功能测试</li>
+<li>设置崩溃报告：</li>
+<li>对应用埋点：</li>
+<li>日志：日志贯穿生命周期，埋点应只在开发特定阶段</li>
+</ol>
+<h1 id="2-内存管理"><a href="#2-内存管理" class="headerlink" title="2 内存管理"></a>2 内存管理</h1><h2 id="内存消耗"><a href="#内存消耗" class="headerlink" title="内存消耗"></a>内存消耗</h2><h3 id="栈大小"><a href="#栈大小" class="headerlink" title="栈大小"></a>栈大小</h3><p>每个线程都有专属栈空间，栈大小影响因素：</p>
+<ol>
+<li>方法数，每个方法调用其它方法都会入栈，<a href="http://www.ruanyifeng.com/blog/2015/04/tail-call.html" target="_blank" rel="noopener">Tail Call</a></li>
+<li>一个方法中最多可用变量数</li>
+<li>视图层级深度</li>
+</ol>
+<h3 id="堆大小"><a href="#堆大小" class="headerlink" title="堆大小"></a>堆大小</h3><ul>
+<li>每个进程的所有线程共享一个堆。</li>
+<li>从栈复制到堆，和从堆复制到栈，都是代价昂贵的操作</li>
+<li>不要忽视 didReceiveMemoryWarning信号</li>
+</ul>
+<h2 id="内存管理模式"><a href="#内存管理模式" class="headerlink" title="内存管理模式"></a>内存管理模式</h2><ul>
+<li>引用计数：MRC 和 ARC</li>
+<li>自动释放： @autoreleasepool</li>
+<li>引用类型：assign，retain，copy，atomic，nonatomic，readonly，readwrite以及strong，weak</li>
+<li>僵尸对象：scheme -》 edit sheme -》 enable zombie objects</li>
+<li>循环引用： delegate（例如animation）和block，解决办法：临时变量，手动置nil 和 weak处理；使用NSTimer和NSThread总应该通过间接层（WeakProxy）实现销毁</li>
+<li>观察者：addObserver方法不会持有观察、被观察对象的强引用。想想<a href="https://www.jianshu.com/p/e59bb8f59302" target="_blank" rel="noopener">KVO原理</a>？再想想为啥没移除为crash？ 和通知中心一样，避免的方法就是中间加层</li>
+<li>某方法接收NSError*<em>参数时，必须写成 NSError </em> __autoreleasing *error</li>
+<li>警惕id类型</li>
+<li>合理时候用全局变量：没有被其它对象持有、不是常量、整个应用只有一个而不是每个组件一个</li>
+<li>单例：<a href="https://objccn.io/issue-13-2/" target="_blank" rel="noopener">避免滥用单例</a></li>
+<li><a href="https://blog.csdn.net/linshaolie/article/details/47037941" target="_blank" rel="noopener">iOS依赖注入</a></li>
+<li>禁用ARC，使用retain找到神秘持有者<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if !__has_feature(objc_arc)</span><br><span class="line">-(id) retain &#123;</span><br><span class="line">NSLog(@&quot;%s  %@&quot;, __PRETTY_FUNCTION__, [NSThread callStackSymbols]);</span><br><span class="line">return [super retain];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="代码感知"><a href="#代码感知" class="headerlink" title="代码感知"></a>代码感知</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 已用内存</span><br><span class="line">vm_size_t getUsedMemory() &#123;</span><br><span class="line">task_basic_info_data_t info;</span><br><span class="line">mach_msg_type_number_t size = sizeof(info);</span><br><span class="line">kern_return_t kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&amp;info, &amp;size);</span><br><span class="line">if (kerr == KERN_SUCCESS) &#123;</span><br><span class="line">return info.resident_size;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">// 可用内存</span><br><span class="line">vm_size_t getFreeMemory() &#123;</span><br><span class="line">mach_port_t host = mach_host_self();</span><br><span class="line">mach_msg_type_number_t size = sizeof(vm_statistics_data_t) / sizeof(integer_t) ;</span><br><span class="line">vm_size_t pagesize;</span><br><span class="line">vm_statistics_data_t vmstat;</span><br><span class="line">host_page_size(host, &amp;pagesize);</span><br><span class="line">host_statistics(host, HOST_VM_INFO, (host_info_t)&amp;vmstat, &amp;size);</span><br><span class="line">return vmstat.free_count * pagesize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="3-能耗"><a href="#3-能耗" class="headerlink" title="3 能耗"></a>3 能耗</h1><h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><ul>
+<li>尽量少的，快的处理数据</li>
+<li>优化静态编译处理，例如tableview设备上可渲染N条数据，则处理3N数据而不是全部数据，快速滑动时等速度降下来再处理等</li>
+</ul>
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><ul>
+<li>蜂窝网络耗电高于wifi，因蜂窝数据连接会定期扫描以寻找更强信号。</li>
+<li>无网时，应推迟后续网络请求，知道网络恢复。实现方案：待定,但感觉没有直接返回错误，网络恢复重要接口再请求好</li>
+<li>减少Reachability网络状态检查频次。</li>
+<li>数据源更新频率低时，减少重复请求频次：最简单的算法：数据相同，请求间隔累加</li>
+<li>应定期集中短暂的使用网络，而不是持续的保持活动的数据流，只有这样，网络硬件才有机会关闭</li>
+</ul>
+<h2 id="定位管理器和GPS"><a href="#定位管理器和GPS" class="headerlink" title="定位管理器和GPS"></a>定位管理器和GPS</h2><ul>
+<li>distanceFilter 移动最小距离，不会减少GPS接收器使用，但会影响CPU的使用</li>
+<li>desiredAccuracy 影响使用天线个数，精度高用的天线多，更耗能</li>
+<li>尽量关闭位置跟踪。在需要跟踪时调用startUpdatingLocation，不需要时调stopUpdatingLocation</li>
+<li>后台长距离持续跟踪用 startMonitoringSignificantLocationChanges，精度跟desiredAccuracy和distanceFilter无关。比较好的办法是，前台用startUpdatingLocation，后台用startMonitoringSignificantLocationChanges</li>
+<li>因缺乏资源，后台应用被关闭。此状况下一旦发生位置变化，应用会重启，因为需要重新初始化位置监听<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions &#123;</span><br><span class="line">if (launchOptions[UIApplicationLaunchOptionsLocationKey]) &#123;</span><br><span class="line">// 重启</span><br><span class="line">[LocaitonManager startMonitoringSignificantLocationChanges];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="屏幕"><a href="#屏幕" class="headerlink" title="屏幕"></a>屏幕</h2><ul>
+<li>前台使用动画，一旦程序进入后台应立即暂停动画</li>
+<li>视频播放，使用UIApplication对象的idleTimerDisabled = YES 实现常亮，当前也可根据前后台切换来设置是否获取锁</li>
+<li>多屏幕，当外部屏幕播放电影等时手机屏幕可保留最基本控制，以减少屏幕更新，延长电池使用</li>
+</ul>
+<h2 id="其它硬件"><a href="#其它硬件" class="headerlink" title="其它硬件"></a>其它硬件</h2><ul>
+<li>蓝牙、相机、扬声器、麦克风等，原则是当应用处于前台才与这些硬件交互，应用处于后台应停止交互</li>
+</ul>
+<h2 id="分析电量使用"><a href="#分析电量使用" class="headerlink" title="分析电量使用"></a>分析电量使用</h2><ul>
+<li>instruments</li>
+<li>精准电量：monsoon solutions 工具</li>
+</ul>
+<h2 id="代码感知-1"><a href="#代码感知-1" class="headerlink" title="代码感知"></a>代码感知</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">// 电池感知，ios8前只能精确动5%，以后可精确到1%</span><br><span class="line">- (BOOL)shouldProceedWithMinLevel:(NSUInteger)minLevel &#123;</span><br><span class="line">UIDevice *device = [UIDevice currentDevice];</span><br><span class="line">device.batteryMonitoringEnabled = YES;</span><br><span class="line">UIDeviceBatteryState state = device.batteryState;</span><br><span class="line">// 充电或满电</span><br><span class="line">if (state == UIDeviceBatteryStateCharging || state == UIDeviceBatteryStateFull) &#123;</span><br><span class="line">return YES;</span><br><span class="line">&#125;</span><br><span class="line">NSUInteger batteryLevel = (NSUInteger)(device.batteryLevel * 100);</span><br><span class="line">if (batteryLevel &gt;= minLevel) &#123;</span><br><span class="line">return YES;</span><br><span class="line">&#125;</span><br><span class="line">return NO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// cpu利用率</span><br><span class="line">- (float)appCPUUsage &#123;</span><br><span class="line">kern_return_t kr;</span><br><span class="line">task_info_data_t info;</span><br><span class="line">mach_msg_type_number_t infoCount = TASK_INFO_MAX;</span><br><span class="line">kr = task_info(mach_host_self(), TASK_BASIC_INFO, (task_info_t)info, &amp;infoCount);</span><br><span class="line">if (kr != KERN_SUCCESS) &#123;</span><br><span class="line">return -1;</span><br><span class="line">&#125;</span><br><span class="line">thread_array_t thread_list;</span><br><span class="line">mach_msg_type_number_t thread_count;</span><br><span class="line">thread_info_data_t thinfo;</span><br><span class="line">mach_msg_type_number_t thread_info_count;</span><br><span class="line">thread_basic_info_t basic_info_th;</span><br><span class="line">kr = task_threads(mach_host_self(), &amp;thread_list, &amp;thread_count);</span><br><span class="line">if (kr != KERN_SUCCESS) &#123;</span><br><span class="line">return -1;</span><br><span class="line">&#125;</span><br><span class="line">long total_time = 0;</span><br><span class="line">long total_userTime = 0;</span><br><span class="line">CGFloat total_cpu = 0;</span><br><span class="line">int j;</span><br><span class="line">for (j = 0; j &lt; (int)thread_count; j++) &#123;</span><br><span class="line">thread_info_count = THREAD_INFO_MAX;</span><br><span class="line">kr = thread_info(thread_list[j], THREAD_BASIC_INFO, (thread_info_t)thinfo, &amp;thread_info_count);</span><br><span class="line">if (kr != KERN_SUCCESS) &#123;</span><br><span class="line">return -1;</span><br><span class="line">&#125;</span><br><span class="line">basic_info_th = (thread_basic_info_t)thinfo;</span><br><span class="line">if (!(basic_info_th-&gt;flags &amp; TH_FLAGS_IDLE)) &#123;</span><br><span class="line">total_time = total_time + basic_info_th-&gt;user_time.seconds + basic_info_th-&gt;system_time.seconds;</span><br><span class="line">total_userTime = total_userTime + basic_info_th-&gt;user_time.microseconds + basic_info_th-&gt;system_time.microseconds;</span><br><span class="line">total_cpu = total_cpu + basic_info_th-&gt;cpu_usage / (float)TH_USAGE_SCALE * 100.0;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">vm_deallocate(mach_host_self(), (vm_offset_t)thread_list, thread_count * sizeof(thread_t));</span><br><span class="line">return total_cpu;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="4-并发编程"><a href="#4-并发编程" class="headerlink" title="4 并发编程"></a>4 并发编程</h1><h2 id="线程开销"><a href="#线程开销" class="headerlink" title="线程开销"></a>线程开销</h2><ul>
+<li>主线程栈空间1M，二级线程默认分配512K的栈空间（可改），但某个时间点的实际使用栈空间要小的多</li>
+<li>创建线程很耗时，平局在30毫秒左右，因多次上下文切换</li>
+<li>dispatch_async 函数分发到全局队列不一定会新建线程执行任务，全局队列底层线程池上限是64个，如果线程池满了，那么后续的任务会被阻塞，有可能crash</li>
+</ul>
+<h2 id="操作和队列"><a href="#操作和队列" class="headerlink" title="操作和队列"></a>操作和队列</h2><ul>
+<li><a href="http://www.cocoachina.com/ios/20140520/8485.html" target="_blank" rel="noopener">GCD、NSOperationQueue 和 NSthread简介</a></li>
+<li>锁的应用</li>
+<li>GCD可以设置优先级，也可以cancel</li>
+<li>cancel都是设置标志位，对已开始的无效</li>
+</ul>
+<h2 id="线程安全的代码"><a href="#线程安全的代码" class="headerlink" title="线程安全的代码"></a>线程安全的代码</h2><ul>
+<li>原子性 atomic 默认的，但会增加开销</li>
+<li>@synchronized 同步块，可以创建信号量并进入临界区，过度使用@synchronized会拖慢运行速度，因为任何时间都只有一个线程在临界区内执行。</li>
+<li>锁：NSLock，NSRecursiveLock，NSCondition</li>
+<li>将读写锁应用于并发读写 dispatch_barrier 阻塞操作用于写</li>
+<li>使用不可变实体，不只是NSArray等，也包括怎么保证自定义类的不可变性？使用建造者模式</li>
+<li>使用集中的状态更新服务</li>
+<li>swift中尽量不使用类。</li>
+<li>冰棒不可变实体：即使用一个frozen的bool属性标记此对象是否可变，所有属性setter方法均检查frozen来判断是否可更改。</li>
+<li>状态观察与通知：RAC</li>
+<li>异步优于同步，使用promise是最好的方式</li>
+</ul>
+<h1 id="应用的生命周期"><a href="#应用的生命周期" class="headerlink" title="应用的生命周期"></a>应用的生命周期</h1><h2 id="AppDelegate"><a href="#AppDelegate" class="headerlink" title="AppDelegate"></a>AppDelegate</h2><h2 id="应用启动"><a href="#应用启动" class="headerlink" title="应用启动"></a>应用启动</h2><ul>
+<li>第一次安装使用，反复拆解任务原则：确定在展示UI前必须执行的任务，按顺序执行，将任务分为必须在main执行和可在其它线程执行，其它任务可以在加载UI后执行或异步执行</li>
+<li>冷启动：尽可能少的请求和展示数据，适当增加提示</li>
+<li>热启动：</li>
+<li>升级后启动：注意缓存问题</li>
+</ul>
+<h2 id="推送通知"><a href="#推送通知" class="headerlink" title="推送通知"></a>推送通知</h2><ul>
+<li>远程通知：静默更新，富文本样式，通知调用顺序，当前app状态</li>
+<li>先静默下载更新，在本地通知用户打开，可以更快显示内容</li>
+</ul>
+<h2 id="后台拉取"><a href="#后台拉取" class="headerlink" title="后台拉取"></a>后台拉取</h2><ul>
+<li>application：performFetchWith</li>
+<li>任务必须在30秒内完成，尽量少拉取没用的东西，使用NSURLSession</li>
+<li>后台拉取时其它挂起的队列也可能恢复，如果其它队列超时可能crash</li>
+<li>后台拉取间隔受系统因素影响，不要过分依赖起规律</li>
+</ul>
+<h1 id="用户界面"><a href="#用户界面" class="headerlink" title="用户界面"></a>用户界面</h1><h2 id="视图控制器"><a href="#视图控制器" class="headerlink" title="视图控制器"></a>视图控制器</h2><ul>
+<li>VC生命周期：init—&gt;loadView—&gt;viewDidLoad—&gt;viewWillApper—&gt;viewDidApper—&gt;viewWillDisapper—&gt;viewDidDisapper—&gt;viewWillUnload-&gt;viewDidUnload—&gt;dealloc</li>
+<li>保持VC轻量：只是纽带，不是存放所有逻辑的地方</li>
+<li>不要在VC中写动画：独立动画类，VC作为参数</li>
+<li>使用数据源和委托协议，将代码按照数据检索、数据更新和其它业务逻辑进行分离，VC只能用来选择正确的视图，并将他们链接到供应源。</li>
+<li>VC响应来自视图的事件，然后链接到数据接收器</li>
+<li>VC响应系统级UI相关事件，例如方向和低内存等</li>
+<li>不要编写自定义的init代码</li>
+<li>VC中不要代码布局UI，也不要把所有布局都放到VC里</li>
+<li>创建BaseVC</li>
+<li>也可使用category创建可复用代码</li>
+<li>如果载入时间过长，可加入等待动画，减少用户焦虑</li>
+</ul>
+<h3 id="视图加载"><a href="#视图加载" class="headerlink" title="视图加载"></a>视图加载</h3><ul>
+<li>loadView 自定义UI的注意事项：将view属性设置到视图层级的根上，确保视图正被其它VC共享；不要调用super loadView</li>
+<li>尽量不要重写loadView</li>
+<li>viewDidLoad要尽可能短</li>
+</ul>
+<h3 id="视图层级"><a href="#视图层级" class="headerlink" title="视图层级"></a>视图层级</h3><ul>
+<li>视图结构和渲染步骤：1，构造子视图；2，计算并提供约束；3，为子视图递归执行步骤1和2；4，递归渲染</li>
+<li>减少层级，异步计算</li>
+</ul>
+<h3 id="视图可见性"><a href="#视图可见性" class="headerlink" title="视图可见性"></a>视图可见性</h3><ul>
+<li>viewWillAppear 过渡动画未开始，不要启动任何视图动画</li>
+<li>viewDidAppear VC展示且过渡动画结束，启动视图动画</li>
+<li><p>viewWillDisappear 判断出栈还是入栈</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewWillDisappear:(BOOL)animated &#123;</span><br><span class="line">NSInteger index = [self.navigationController.viewControllers indexOfObject:self];</span><br><span class="line">if (index == NSNotFound) &#123;</span><br><span class="line">// 出栈，销毁</span><br><span class="line">&#125;else &#123;</span><br><span class="line">// 入栈，保存，暂停</span><br><span class="line">&#125;</span><br><span class="line">[super viewWillDisappear:animated];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>viewDidAppear</p>
+</li>
+</ul>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h2><ul>
+<li>尽量减少在mian线程中所做的工作</li>
+<li>避免较大的nib或故事板，拆分成小的，按需加载</li>
+<li>避免多层嵌套，保持扁平化</li>
+<li>延迟加载和重用</li>
+<li>对于复杂的UI而言，最好使用自定义绘图，drawrect</li>
+<li>减少cleanColor使用，减少透明度使用，减少圆角使用</li>
+</ul>
+<h3 id="UILabel"><a href="#UILabel" class="headerlink" title="UILabel"></a>UILabel</h3><ul>
+<li>自定义字体，检查宽度或高度等都是很费时的任务</li>
+<li>纯文本可以使用自定义绘图</li>
+</ul>
+<h3 id="UIButton"><a href="#UIButton" class="headerlink" title="UIButton"></a>UIButton</h3><h3 id="UIImageView"><a href="#UIImageView" class="headerlink" title="UIImageView"></a>UIImageView</h3><ul>
+<li>使用 imageName：加载已知图像</li>
+<li>小图，复用，使用资源包 .xcassets</li>
+<li>一次性大图用完就扔，使用imageWithContentsOfFile</li>
+<li>使用SDWebImage,不要使用硬编码</li>
+<li>尽量不要压缩或拉伸图像，图像多大显示多大性能最高</li>
+<li>处理图像最好在一个单独的专用队列中进行。</li>
+</ul>
+<h3 id="UITableView"><a href="#UITableView" class="headerlink" title="UITableView"></a>UITableView</h3><ul>
+<li>使用cell的重用机制</li>
+<li>尽量避免动态高度单元格，如果必须使用动态高度，标记哪些是脏的，减少不必要渲染</li>
+<li>使用自定义视图重用cell是避免调用 layoutIfNeeded每次都布局</li>
+<li>避免透明子视图</li>
+<li>快速滚动使用外壳cell（即模糊效果的cell），滚动快结束再刷新可视范围cell</li>
+<li>避免渐变、图像缩放以及任何屏幕外的绘制。</li>
+</ul>
+<h3 id="自定义视图"><a href="#自定义视图" class="headerlink" title="自定义视图"></a>自定义视图</h3><ul>
+<li>drawRect方法不但可以使用CoreGraphics，也可以初始化再子视图调drawInRect方法绘制</li>
+</ul>
+<h3 id="自动布局"><a href="#自动布局" class="headerlink" title="自动布局"></a>自动布局</h3><ul>
+<li>尽量用</li>
+</ul>
+<h1 id="网络-1"><a href="#网络-1" class="headerlink" title="网络"></a>网络</h1><h2 id="指标和测量"><a href="#指标和测量" class="headerlink" title="指标和测量"></a>指标和测量</h2><h3 id="DNS查找时间"><a href="#DNS查找时间" class="headerlink" title="DNS查找时间"></a>DNS查找时间</h3><ul>
+<li>发起链接得第一步是DNS查找</li>
+<li>减少查找时间：减少专有域名数量，启动时只链接关键域名，</li>
+</ul>
+<h3 id="SSL握手时间"><a href="#SSL握手时间" class="headerlink" title="SSL握手时间"></a>SSL握手时间</h3><ul>
+<li>减少应用发起的连接数；为所有的https请求添加头Connection:keep-alive; 使用域分片</li>
+</ul>
+<h3 id="网络类型"><a href="#网络类型" class="headerlink" title="网络类型"></a>网络类型</h3><ul>
+<li>Wifi，4G,3G,2G</li>
+<li>设计时考虑不同网络的可用性；出现失败时，在随机的、以指数增长的延迟后进行重试，并设置最多重试次数；设定强制刷新之间的最短时间；监控网络状态变化但不要缓存网络状态；基于网络类型下载内容；预下载预缓存；</li>
+</ul>
+<h3 id="延迟"><a href="#延迟" class="headerlink" title="延迟"></a>延迟</h3><ul>
+<li>延迟 = 请求总时间 - 服务器话费时间</li>
+</ul>
+<h2 id="应用部署"><a href="#应用部署" class="headerlink" title="应用部署"></a>应用部署</h2><h3 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h3><h3 id="请求"><a href="#请求" class="headerlink" title="请求"></a>请求</h3><ul>
+<li>不要为每个操作都进行一次请求，使用批量请求</li>
+<li>使用http缓存头设置正确的缓存级别</li>
+<li>减少不必要的请求，如果有必要可限定请求间隔，请求重复数据可延长间隔，请求失败以指数增长延长重试间隔</li>
+</ul>
+<h3 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h3><ul>
+<li>压缩</li>
+<li>PB？</li>
+</ul>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="网络链接调节器"><a href="#网络链接调节器" class="headerlink" title="网络链接调节器"></a>网络链接调节器</h3><h3 id="AT-amp-T应用资源优化器"><a href="#AT-amp-T应用资源优化器" class="headerlink" title="AT&amp;T应用资源优化器"></a>AT&amp;T应用资源优化器</h3><h3 id="charles-whistle"><a href="#charles-whistle" class="headerlink" title="charles || whistle"></a>charles || whistle</h3><h1 id="数据共享"><a href="#数据共享" class="headerlink" title="数据共享"></a>数据共享</h1><h2 id="深层链接"><a href="#深层链接" class="headerlink" title="深层链接"></a>深层链接</h2><ul>
+<li>使用统一资源标识符，其链接到应用内的特定位置</li>
+</ul>
+<h2 id="剪切板"><a href="#剪切板" class="headerlink" title="剪切板"></a>剪切板</h2><ul>
+<li>不可控：传递不重要的消息</li>
+<li>避免大数据，</li>
+<li>进入后台后最好清除剪切板</li>
+</ul>
+<h1 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h1><ul>
+<li>匿名用户设备id || 用户认证单点登录</li>
+<li>使用https</li>
+<li>本地敏感数据加密</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    焦正奎
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2016/10/07/高性能的ios应用开发/" title="高性能的ios应用开发">http://yoursite.com/2016/10/07/高性能的ios应用开发/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/18/iOS锁相关/" rel="next" title="iOS锁相关">
+                <i class="fa fa-chevron-left"></i> iOS锁相关
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/16/CocoaPod问题/" rel="prev" title="CocoaPod问题">
+                CocoaPod问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="焦正奎">
+            
+              <p class="site-author-name" itemprop="name">焦正奎</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-移动应用的性能"><span class="nav-number">1.</span> <span class="nav-text">1 移动应用的性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能指标"><span class="nav-number">1.1.</span> <span class="nav-text">性能指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用性能分析"><span class="nav-number">1.2.</span> <span class="nav-text">应用性能分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测量"><span class="nav-number">1.3.</span> <span class="nav-text">测量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-内存管理"><span class="nav-number">2.</span> <span class="nav-text">2 内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存消耗"><span class="nav-number">2.1.</span> <span class="nav-text">内存消耗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#栈大小"><span class="nav-number">2.1.1.</span> <span class="nav-text">栈大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆大小"><span class="nav-number">2.1.2.</span> <span class="nav-text">堆大小</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存管理模式"><span class="nav-number">2.2.</span> <span class="nav-text">内存管理模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码感知"><span class="nav-number">2.3.</span> <span class="nav-text">代码感知</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-能耗"><span class="nav-number">3.</span> <span class="nav-text">3 能耗</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU"><span class="nav-number">3.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">3.2.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定位管理器和GPS"><span class="nav-number">3.3.</span> <span class="nav-text">定位管理器和GPS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#屏幕"><span class="nav-number">3.4.</span> <span class="nav-text">屏幕</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它硬件"><span class="nav-number">3.5.</span> <span class="nav-text">其它硬件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析电量使用"><span class="nav-number">3.6.</span> <span class="nav-text">分析电量使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码感知-1"><span class="nav-number">3.7.</span> <span class="nav-text">代码感知</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-并发编程"><span class="nav-number">4.</span> <span class="nav-text">4 并发编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程开销"><span class="nav-number">4.1.</span> <span class="nav-text">线程开销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作和队列"><span class="nav-number">4.2.</span> <span class="nav-text">操作和队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程安全的代码"><span class="nav-number">4.3.</span> <span class="nav-text">线程安全的代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用的生命周期"><span class="nav-number">5.</span> <span class="nav-text">应用的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AppDelegate"><span class="nav-number">5.1.</span> <span class="nav-text">AppDelegate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用启动"><span class="nav-number">5.2.</span> <span class="nav-text">应用启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推送通知"><span class="nav-number">5.3.</span> <span class="nav-text">推送通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后台拉取"><span class="nav-number">5.4.</span> <span class="nav-text">后台拉取</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户界面"><span class="nav-number">6.</span> <span class="nav-text">用户界面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#视图控制器"><span class="nav-number">6.1.</span> <span class="nav-text">视图控制器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#视图加载"><span class="nav-number">6.1.1.</span> <span class="nav-text">视图加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视图层级"><span class="nav-number">6.1.2.</span> <span class="nav-text">视图层级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视图可见性"><span class="nav-number">6.1.3.</span> <span class="nav-text">视图可见性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#视图"><span class="nav-number">6.2.</span> <span class="nav-text">视图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UILabel"><span class="nav-number">6.2.1.</span> <span class="nav-text">UILabel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIButton"><span class="nav-number">6.2.2.</span> <span class="nav-text">UIButton</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIImageView"><span class="nav-number">6.2.3.</span> <span class="nav-text">UIImageView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UITableView"><span class="nav-number">6.2.4.</span> <span class="nav-text">UITableView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义视图"><span class="nav-number">6.2.5.</span> <span class="nav-text">自定义视图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动布局"><span class="nav-number">6.2.6.</span> <span class="nav-text">自动布局</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络-1"><span class="nav-number">7.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#指标和测量"><span class="nav-number">7.1.</span> <span class="nav-text">指标和测量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS查找时间"><span class="nav-number">7.1.1.</span> <span class="nav-text">DNS查找时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSL握手时间"><span class="nav-number">7.1.2.</span> <span class="nav-text">SSL握手时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络类型"><span class="nav-number">7.1.3.</span> <span class="nav-text">网络类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延迟"><span class="nav-number">7.1.4.</span> <span class="nav-text">延迟</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用部署"><span class="nav-number">7.2.</span> <span class="nav-text">应用部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器"><span class="nav-number">7.2.1.</span> <span class="nav-text">服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求"><span class="nav-number">7.2.2.</span> <span class="nav-text">请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据格式"><span class="nav-number">7.2.3.</span> <span class="nav-text">数据格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工具"><span class="nav-number">7.3.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络链接调节器"><span class="nav-number">7.3.1.</span> <span class="nav-text">网络链接调节器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AT-amp-T应用资源优化器"><span class="nav-number">7.3.2.</span> <span class="nav-text">AT&amp;T应用资源优化器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#charles-whistle"><span class="nav-number">7.3.3.</span> <span class="nav-text">charles || whistle</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据共享"><span class="nav-number">8.</span> <span class="nav-text">数据共享</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#深层链接"><span class="nav-number">8.1.</span> <span class="nav-text">深层链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剪切板"><span class="nav-number">8.2.</span> <span class="nav-text">剪切板</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安全"><span class="nav-number">9.</span> <span class="nav-text">安全</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">焦正奎</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

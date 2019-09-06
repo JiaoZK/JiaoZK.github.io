@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;新年新气象，但…我却不知道水啥！Flutter上次看到还是0.3这次再看已经1.0了，必须的拿出时间好好学习学习，但现在也仅仅是刚靠近Flutter门槛，远远没达到入门的标准：知识要形成体系！构建简单页面这种也没啥可水的，毕竟Flutter中文网上讲的非常详细, github也有大量的问题解决方案。于是就把前段时间的学习步骤发出来吧 1 安装&amp;emsp;&amp;emsp;按Flu">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter入门学习步骤">
+<meta property="og:url" content="http://yoursite.com/2019/01/01/Flutter入门学习步骤/index.html">
+<meta property="og:site_name" content="jiao﹢奎">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;新年新气象，但…我却不知道水啥！Flutter上次看到还是0.3这次再看已经1.0了，必须的拿出时间好好学习学习，但现在也仅仅是刚靠近Flutter门槛，远远没达到入门的标准：知识要形成体系！构建简单页面这种也没啥可水的，毕竟Flutter中文网上讲的非常详细, github也有大量的问题解决方案。于是就把前段时间的学习步骤发出来吧 1 安装&amp;emsp;&amp;emsp;按Flu">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-06T16:32:29.018Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flutter入门学习步骤">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;新年新气象，但…我却不知道水啥！Flutter上次看到还是0.3这次再看已经1.0了，必须的拿出时间好好学习学习，但现在也仅仅是刚靠近Flutter门槛，远远没达到入门的标准：知识要形成体系！构建简单页面这种也没啥可水的，毕竟Flutter中文网上讲的非常详细, github也有大量的问题解决方案。于是就把前段时间的学习步骤发出来吧 1 安装&amp;emsp;&amp;emsp;按Flu">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/01/Flutter入门学习步骤/">
+
+
+
+
+
+  <title>Flutter入门学习步骤 | jiao﹢奎</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jiao﹢奎</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/01/Flutter入门学习步骤/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="焦正奎">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jiao﹢奎">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flutter入门学习步骤</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-01T00:31:35+08:00">
+                2019-01-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/flutter/" itemprop="url" rel="index">
+                    <span itemprop="name">flutter</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;&emsp;新年新气象，但…我却不知道水啥！Flutter上次看到还是0.3这次再看已经1.0了，必须的拿出时间好好学习学习，但现在也仅仅是刚靠近Flutter门槛，远远没达到入门的标准：知识要形成体系！构建简单页面这种也没啥可水的，毕竟<a href="https://flutterchina.club/upgrading/" target="_blank" rel="noopener">Flutter中文网</a>上讲的非常详细, <a href="https://github.com/flutter/flutter" target="_blank" rel="noopener">github</a>也有大量的问题解决方案。于是就把前段时间的学习步骤发出来吧</p>
+<h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1 安装"></a>1 安装</h3><p>&emsp;&emsp;按<a href="https://flutterchina.club/upgrading/" target="_blank" rel="noopener">Flutter中文网</a> 安装环境，可能遇到问题下面列举</p>
+<ol>
+<li>安装过程中如果需要关闭SIP，如果电脑启用了SIP（System Integrity Protection），增加了rootless机制</li>
+</ol>
+<ul>
+<li>1.1，重启，过程中按住 command+R，进入保护模式</li>
+<li>1.2，打开terminal终端，输入 csrutil disable</li>
+<li>1.3，再次重启，即可对 usr/bin 目录下文件进行修改</li>
+<li>1.4，如果要恢复保护机制，重新进入保护模式，输入 csrutil enable</li>
+</ul>
+<ol start="2">
+<li>Android studio 找不到 Flutter</li>
+</ol>
+<p>&emsp;&emsp;Android studio -&gt; Preferences -&gt; System Setting -&gt; updates -&gt; 去掉 use secure connection</p>
+<ol start="3">
+<li>PATH环境未生效</li>
+</ol>
+<p>&emsp;&emsp;user目录 -&gt; command+shift+.  打开隐藏文件 -&gt;  打开 .bash_profile 文件，添加相应PATH -&gt; 保存 -&gt; 重启</p>
+<ol start="4">
+<li>运行flutter就卡死</li>
+</ol>
+<p>&emsp;&emsp;偶然发现其实根本原因是mac限制了单进程最大线程个数为64，超过64就卡死了！验证方法：活动监视器 -&gt; 双击android studio -&gt; 取样 -&gt; 查看卡死信息！</p>
+<p>&emsp;&emsp;几经周折找到<a href="https://www.cnblogs.com/augus007/articles/9088519.html" target="_blank" rel="noopener">修改内核的方法</a>：vim  /etc/sysctl.conf 添加如下代码 kern.wq_max_constrained_threads=128 修改保存后调用 sysctl -p 加载新配置，将单个进程最大线程数提升至128个。</p>
+<p>&emsp;&emsp;PS:kern.wq_max_constrained_threads这个参数是通过全局搜64搜出来的然后慢慢试出来的，同志们修改前记得备份</p>
+<ol start="5">
+<li><a href="https://stackoverflow.com/questions/48650831/dart-sdk-is-not-configured" target="_blank" rel="noopener">Dart SDK is not configured</a>, android Studio -&gt; perference -&gt; framewoek -&gt; flutter</li>
+</ol>
+<h3 id="2-Flutter的State类"><a href="#2-Flutter的State类" class="headerlink" title="2 Flutter的State类"></a>2 Flutter的State类</h3><p>&emsp;&emsp;重点，响应式编程核心。先记住如下两张图，<a href="http://wiki.baidu.com/pages/viewpage.action?spaceKey=fmp&amp;title=Flutter" target="_blank" rel="noopener">参考</a></p>
+<p>&emsp;&emsp;State 生命周期</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">A[开始]--&gt;B[构造函数]</span><br><span class="line">subgraph 构建</span><br><span class="line">B--&gt;C[initState]</span><br><span class="line">C--&gt;D[didChangeDependencies]</span><br><span class="line">D--&gt;E[build]</span><br><span class="line">end</span><br><span class="line">E--&gt;F&#123;显示在RenderTree&#125;</span><br><span class="line">subgraph 改变</span><br><span class="line">F--&gt;G[组件状态改变]</span><br><span class="line">G--&gt;H[didUpdateWidget]</span><br><span class="line">H--&gt;I[build]</span><br><span class="line">I--&gt;F</span><br><span class="line">end</span><br><span class="line">subgraph 销毁</span><br><span class="line">F--&gt;J[移除掉]</span><br><span class="line">J--&gt;K[deactivate]</span><br><span class="line">K--&gt;L[dispose]</span><br><span class="line">L--&gt;M[结束]</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;Stateless VS Stateful<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">subgraph StatelessWidgets</span><br><span class="line">A[constructor func]--&gt;B[build]</span><br><span class="line">end</span><br><span class="line">subgraph StatefulWidgets</span><br><span class="line">C[constructor func]--&gt;D[initState]</span><br><span class="line">D--&gt;F[build]</span><br><span class="line">F--&gt;E[setState]</span><br><span class="line">E--&gt;G[didUpdateWidget]</span><br><span class="line">G--&gt;H[build]</span><br><span class="line">end</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-Dart语法预览"><a href="#3-Dart语法预览" class="headerlink" title="3 Dart语法预览"></a>3 Dart语法预览</h3><p>&emsp;&emsp;<a href="http://dart.goodev.org" target="_blank" rel="noopener">Dart 语法</a>对学过swift或者学过JS的同学，我建议<em>直接速读</em><a href="http://dart.goodev.org/guides/language/language-tour" target="_blank" rel="noopener">Dart 语法预览</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class Spacecraft &#123;</span><br><span class="line">String name;</span><br><span class="line">DateTime launchDate;</span><br><span class="line">int launchYear;</span><br><span class="line"></span><br><span class="line">// Constructor, including syntactic sugar for assignment to members.</span><br><span class="line">Spacecraft(this.name, this.launchDate) &#123;</span><br><span class="line">// Pretend the following is something you&apos;d actually want to run in</span><br><span class="line">// a constructor.</span><br><span class="line">launchYear = launchDate?.year;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Named constructor that forwards to the default one.</span><br><span class="line">Spacecraft.unlaunched(String name) : this(name, null);</span><br><span class="line"></span><br><span class="line">// Method.</span><br><span class="line">void describe() &#123;</span><br><span class="line">print(&apos;Spacecraft: $name&apos;);</span><br><span class="line">if (launchDate != null) &#123;</span><br><span class="line">int years = new DateTime.now().difference(launchDate).inDays ~/ 365;</span><br><span class="line">print(&apos;Launched: $launchYear ($years years ago)&apos;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">print(&apos;Unlaunched&apos;);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-Flutter中文网"><a href="#4-Flutter中文网" class="headerlink" title="4 Flutter中文网"></a>4 Flutter中文网</h3><ul>
+<li><a href="https://flutterchina.club/get-started/codelab/" target="_blank" rel="noopener">编写第一个Flutter应用</a></li>
+<li><a href="https://flutterchina.club/get-started/learn-more/" target="_blank" rel="noopener">了解更多</a></li>
+</ul>
+<h3 id="5-先抄几个demo"><a href="#5-先抄几个demo" class="headerlink" title="5 先抄几个demo"></a>5 先抄几个demo</h3><ul>
+<li>自带示例 flutter/examples </li>
+<li>其它dome <a href="https://github.com/iampawan/FlutterExampleApps" target="_blank" rel="noopener">https://github.com/iampawan/FlutterExampleApps</a></li>
+<li>资料汇总 <a href="https://github.com/Solido/awesome-flutter" target="_blank" rel="noopener">https://github.com/Solido/awesome-flutter</a></li>
+</ul>
+<h3 id="6-按部就班"><a href="#6-按部就班" class="headerlink" title="6 按部就班"></a>6 按部就班</h3><p>&emsp;&emsp;按中文网目录往下琢磨就好了</p>
+<h3 id="7-了解更好"><a href="#7-了解更好" class="headerlink" title="7 了解更好"></a>7 了解更好</h3><ul>
+<li><a href="https://flutterchina.club/flutter-for-ios/" target="_blank" rel="noopener">Flutter for iOS 开发</a>  速读即可</li>
+<li><a href="https://flutterchina.club/faq/" target="_blank" rel="noopener">Flutter中文网-常见问题</a></li>
+<li>Flutter右上角的《Flutter实战》快速浏览即可。附上我画的思维导图 链接:<a href="https://pan.baidu.com/s/1V9xufLLp9oIz0AcApnjhNg" target="_blank" rel="noopener">https://pan.baidu.com/s/1V9xufLLp9oIz0AcApnjhNg</a> 提取码: 9w7a </li>
+</ul>
+<h3 id="8-Hot-reload-（热重载）Not-Hot-fix-（热修复）"><a href="#8-Hot-reload-（热重载）Not-Hot-fix-（热修复）" class="headerlink" title="8 Hot reload （热重载）Not Hot fix （热修复）"></a>8 Hot reload （热重载）Not Hot fix （热修复）</h3><h3 id="9-add-flutter-to-App"><a href="#9-add-flutter-to-App" class="headerlink" title="9 add flutter to App"></a>9 add flutter to App</h3><ul>
+<li>官网 <a href="https://github.com/flutter/flutter/wiki/Add-Flutter-to-existing-apps" target="_blank" rel="noopener">https://github.com/flutter/flutter/wiki/Add-Flutter-to-existing-apps</a></li>
+<li>官方dome（不能用） <a href="https://github.com/flutter/ios_add2app" target="_blank" rel="noopener">https://github.com/flutter/ios_add2app</a> ，稍微改了改 链接:<a href="https://pan.baidu.com/s/1V9xufLLp9oIz0AcApnjhNg" target="_blank" rel="noopener">https://pan.baidu.com/s/1V9xufLLp9oIz0AcApnjhNg</a> 提取码: 9w7a</li>
+</ul>
+<h3 id="10-我遇到的小问题"><a href="#10-我遇到的小问题" class="headerlink" title="10 我遇到的小问题"></a>10 我遇到的小问题</h3><ul>
+<li><a href="https://www.cnblogs.com/mmcc/p/5133645.html" target="_blank" rel="noopener">android studio 断点调试和高级调试</a></li>
+<li><a href="https://juejin.im/post/5b2b21bc51882574b629f8a0" target="_blank" rel="noopener">Flutter视图基础简介–Widget、Element、RenderObject</a> Widget是类定义，Element是实例对象，rednerObject负责实例对象的布局</li>
+<li><a href="https://stackoverflow.com/questions/51061147/what-is-the-difference-between-material-and-materialapp-in-flutter" target="_blank" rel="noopener">What is the difference between Material and MaterialApp in Flutter?</a> MaterialApp定义包含appbar之类的app，Scaffold帮助构建对应的appbar</li>
+<li><a href="https://stackoverflow.com/questions/46717971/can-somebody-explain-this-dart-syntax?rq=1" target="_blank" rel="noopener">TapboxA({Key key}) : super(key: key); 是什么意思</a></li>
+<li><a href="https://yq.aliyun.com/articles/604054" target="_blank" rel="noopener">Flutter Engine线程管理与Dart Isolate机制</a></li>
+<li><a href="https://blog.csdn.net/w411207/article/details/80026649" target="_blank" rel="noopener">Dart - Isolate 并发</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1200792" target="_blank" rel="noopener">Flutter常用widget “Expanded”，“Flexible”</a></li>
+<li><a href="https://blog.csdn.net/chenlove1/article/details/83032767" target="_blank" rel="noopener">Flutter Container 参数详解</a></li>
+<li><a href="https://blog.csdn.net/lyh1299259684/article/details/80565419" target="_blank" rel="noopener">Dart学习之方法函数</a></li>
+<li><a href="https://stackoverflow.com/questions/27683924/how-do-getters-and-setters-change-properties-in-dart" target="_blank" rel="noopener">How do getters and setters change properties in Dart?</a></li>
+<li>Dart循环引用？Java的垃圾回收可采用引用计数和寻根两种算法，即java虚拟机循环引用不用管！Dart也是垃圾回收，应该也不用管，没找到关于Dart循环引用的资料</li>
+<li><a href="https://www.jianshu.com/p/720b968f4e2c" target="_blank" rel="noopener">Dart中实现单例模式</a></li>
+<li>rerturn (); 用分号，其它的情况用 , 逗号</li>
+<li>Dart：并不支持函数的重载</li>
+<li><a href="https://news.dartlang.org/2012/06/const-static-final-oh-my.html" target="_blank" rel="noopener">“static”, “final”, and “const” in Dart</a></li>
+<li>lutter的ValueChanged 如果有多个不同的值都需要监听怎么办？</li>
+<li>Category ？</li>
+<li>runtime ？</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    焦正奎
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2019/01/01/Flutter入门学习步骤/" title="Flutter入门学习步骤">http://yoursite.com/2019/01/01/Flutter入门学习步骤/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/22/洛克菲勒留给儿子的38封信/" rel="next" title="洛克菲勒留给儿子的38封信">
+                <i class="fa fa-chevron-left"></i> 洛克菲勒留给儿子的38封信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/31/曾国藩家书/" rel="prev" title="曾国藩家书">
+                曾国藩家书 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="焦正奎">
+            
+              <p class="site-author-name" itemprop="name">焦正奎</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-安装"><span class="nav-number">1.</span> <span class="nav-text">1 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Flutter的State类"><span class="nav-number">2.</span> <span class="nav-text">2 Flutter的State类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Dart语法预览"><span class="nav-number">3.</span> <span class="nav-text">3 Dart语法预览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Flutter中文网"><span class="nav-number">4.</span> <span class="nav-text">4 Flutter中文网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-先抄几个demo"><span class="nav-number">5.</span> <span class="nav-text">5 先抄几个demo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-按部就班"><span class="nav-number">6.</span> <span class="nav-text">6 按部就班</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-了解更好"><span class="nav-number">7.</span> <span class="nav-text">7 了解更好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Hot-reload-（热重载）Not-Hot-fix-（热修复）"><span class="nav-number">8.</span> <span class="nav-text">8 Hot reload （热重载）Not Hot fix （热修复）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-add-flutter-to-App"><span class="nav-number">9.</span> <span class="nav-text">9 add flutter to App</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-我遇到的小问题"><span class="nav-number">10.</span> <span class="nav-text">10 我遇到的小问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">焦正奎</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

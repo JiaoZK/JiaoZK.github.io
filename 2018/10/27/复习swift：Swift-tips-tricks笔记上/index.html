@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;本文只摘抄了自己觉得有用的tip并加了点自己的理解，并不是全部tips。想看全部的自己看大神的Swift tips &amp;amp; tricks  嵌套类型，好处大大滴！权限控制、结构划分等等  自动闭包，能使用自动闭包类型是是这样的() -&amp;gt; T 123456789101112131415161718192021func logIfTure(_ predicate: (">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="复习swift：Swift tips &amp; tricks笔记上">
+<meta property="og:url" content="http://yoursite.com/2018/10/27/复习swift：Swift-tips-tricks笔记上/index.html">
+<meta property="og:site_name" content="jiao﹢奎">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;本文只摘抄了自己觉得有用的tip并加了点自己的理解，并不是全部tips。想看全部的自己看大神的Swift tips &amp;amp; tricks  嵌套类型，好处大大滴！权限控制、结构划分等等  自动闭包，能使用自动闭包类型是是这样的() -&amp;gt; T 123456789101112131415161718192021func logIfTure(_ predicate: (">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-06T16:24:44.429Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="复习swift：Swift tips &amp; tricks笔记上">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;本文只摘抄了自己觉得有用的tip并加了点自己的理解，并不是全部tips。想看全部的自己看大神的Swift tips &amp;amp; tricks  嵌套类型，好处大大滴！权限控制、结构划分等等  自动闭包，能使用自动闭包类型是是这样的() -&amp;gt; T 123456789101112131415161718192021func logIfTure(_ predicate: (">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/27/复习swift：Swift-tips-tricks笔记上/">
+
+
+
+
+
+  <title>复习swift：Swift tips & tricks笔记上 | jiao﹢奎</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jiao﹢奎</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/27/复习swift：Swift-tips-tricks笔记上/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="焦正奎">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jiao﹢奎">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">复习swift：Swift tips & tricks笔记上</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-27T00:22:34+08:00">
+                2018-10-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/swift/" itemprop="url" rel="index">
+                    <span itemprop="name">swift</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;&emsp;本文只摘抄了自己觉得有用的tip并加了点自己的理解，并不是全部tips。想看全部的自己看<a href="https://github.com/JohnSundell/SwiftTips#1-namespacing-with-nested-types" target="_blank" rel="noopener">大神的Swift tips &amp; tricks</a></p>
+<ol>
+<li><p>嵌套类型，好处大大滴！权限控制、结构划分等等</p>
+</li>
+<li><p>自动闭包，能使用自动闭包类型是是这样的() -&gt; T</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">func logIfTure(_ predicate: ()-&gt;Bool)&#123;</span><br><span class="line">if predicate() &#123;</span><br><span class="line">print(&quot;jzk&quot;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">logIfTure(&#123; () -&gt; Bool in</span><br><span class="line">return 2 &gt; 1</span><br><span class="line">&#125;)</span><br><span class="line">logIfTure(&#123;</span><br><span class="line">return 3 &gt; 2</span><br><span class="line">&#125;)</span><br><span class="line">logIfTure(&#123;4&gt;3&#125;)</span><br><span class="line">logIfTure&#123;5&gt;4&#125;</span><br><span class="line"></span><br><span class="line">// 自动闭包写起来就优雅多了</span><br><span class="line">func logIfTure2(_ predicate:@autoclosure ()-&gt;Bool)&#123;</span><br><span class="line">if predicate() &#123;</span><br><span class="line">print(&quot;jzk&quot;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">logIfTure2(6&gt;5)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用typealiases减少长度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typealias DownSuccess = (json: NSURLResponse, filePath: String?) -&gt; ()</span><br><span class="line">func Post(url:String? ,success: DownSuccess)&#123;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用与库同名的类、结构体…，慎用！还是不重复的好</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">extension Command &#123;</span><br><span class="line">enum Error: Swift.Error &#123;</span><br><span class="line">case missing</span><br><span class="line">case invalid(String)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用#function来保证UserDefault的key不重复! 慎用，思路不错，但不严谨</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">extension UserDefaults &#123;</span><br><span class="line">var onboardingCompleted: Bool &#123;</span><br><span class="line">get &#123; return bool(forKey: #function) &#125;</span><br><span class="line">set &#123; set(newValue, forKey: #function) &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>把func和操作符当做闭包传递</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let array = [3, 9, 1, 4, 6, 2]</span><br><span class="line">let sorted = array.sorted(by: &lt;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用guard拆分条件判断</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">guard maxObjectDepth &gt; 0 else &#123; return &#125;</span><br><span class="line">guard maxObjectDepth &lt; 100 else &#123; return &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不要使用swith的default，目的强制编译器检查case是否完全</p>
+</li>
+<li><p>使用 .语法和闭包来初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Logger &#123;</span><br><span class="line">public func logSomething(_ str: String = &quot;&quot;) &#123;</span><br><span class="line">print(&quot;----\(str)&quot;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">// 第一个比较好理解，参数默认值</span><br><span class="line">func test(log: Logger = .init())&#123;</span><br><span class="line">log.logSomething(&quot;1&quot;);</span><br><span class="line">&#125;</span><br><span class="line">test();</span><br><span class="line">/*</span><br><span class="line">但这个我就理解不了了，注意Logger.init后面没有括号</span><br><span class="line">*/</span><br><span class="line">func test2(log:@escaping () -&gt; Logger = Logger.init) &#123;</span><br><span class="line">let log2 = log();</span><br><span class="line">log2.logSomething(&quot;2&quot;);</span><br><span class="line">&#125;</span><br><span class="line">test2();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 === 比较内存相等</p>
+</li>
+<li><p>枚举可有关联值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public enum JSONKey &#123;</span><br><span class="line">case index(Int)</span><br><span class="line">case key(String)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可变参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">extension Canvas &#123;</span><br><span class="line">func add(_ shapes: Shape...) &#123;</span><br><span class="line">shapes.forEach(add)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Avoiding mocking UserDefaults! mocking啥呀，建新的！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class LoginTests: XCTestCase &#123;</span><br><span class="line">private var userDefaults: UserDefaults!</span><br><span class="line">private var manager: LoginManager!</span><br><span class="line"></span><br><span class="line">override func setUp() &#123;</span><br><span class="line">super.setup()</span><br><span class="line"></span><br><span class="line">userDefaults = UserDefaults(suiteName: #file)</span><br><span class="line">userDefaults.removePersistentDomain(forName: #file)</span><br><span class="line"></span><br><span class="line">manager = LoginManager(userDefaults: userDefaults)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加速包测试速度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swift test --parallel</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用闭包创建lazy属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Logger &#123;</span><br><span class="line">private lazy var str: String = &#123;</span><br><span class="line">print(&quot;lazy str init&quot;)</span><br><span class="line">return &quot;jzk&quot;</span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line">public func log()&#123;</span><br><span class="line">print(&quot;my name is \(str)&quot;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">let log1 = Logger();</span><br><span class="line">log1.log();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>组合函数序列! </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">internal func +&lt;A, B, C&gt;(lhs: @escaping (A) throws -&gt; B,</span><br><span class="line">rhs: @escaping (B) throws -&gt; C) -&gt; (A) throws -&gt; C &#123;</span><br><span class="line">return &#123; try rhs(lhs($0)) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public func run() throws &#123;</span><br><span class="line">try (determineTarget + build + analyze + output)()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Using DispatchWorkItem， OC用dispatch_block_t</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">let workItem = DispatchWorkItem &#123;</span><br><span class="line">// Your async code goes in here</span><br><span class="line">&#125;// 注意没括号</span><br><span class="line"></span><br><span class="line">// Execute the work item after 1 second</span><br><span class="line">DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: workItem)</span><br><span class="line"></span><br><span class="line">// You can cancel the work item if you no longer need it</span><br><span class="line">workItem.cancel()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用weak或o避免循环引用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// Apple 给我们的建议是如果能够确定在访问时不会已被释放的话，尽量使用 unowned ，如果存在被释放的可能，那就选择用 weak</span><br><span class="line">dataLoader.loadData(from: url) &#123; [weak self] result in</span><br><span class="line">// 这句检查self基本是定式了</span><br><span class="line">guard let self = self else &#123; </span><br><span class="line">return </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">self.cache(result)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>异步返回的尽量用enum</p>
+</li>
+<li><p>使用关联的枚举值以避免特定于状态的选项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// BEFORE: Lots of state-specific, optional properties</span><br><span class="line"></span><br><span class="line">class Player &#123;</span><br><span class="line">var isWaitingForMatchMaking: Bool</span><br><span class="line">var invitingUser: User?</span><br><span class="line">var numberOfLives: Int</span><br><span class="line">var playerDefeatedBy: Player?</span><br><span class="line">var roundDefeatedIn: Int?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// AFTER: All state-specific information is encapsulated in enum cases</span><br><span class="line"></span><br><span class="line">class Player &#123;</span><br><span class="line">enum State &#123;</span><br><span class="line">case waitingForMatchMaking</span><br><span class="line">case waitingForInviteResponse(from: User)</span><br><span class="line">case active(numberOfLives: Int)</span><br><span class="line">case defeated(by: Player, roundNumber: Int)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var state: State</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>泛型约束中使用闭包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">extension Sequence where Element == () -&gt; Void &#123;</span><br><span class="line">func callAll() &#123;</span><br><span class="line">forEach &#123; $0() &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extension Sequence where Element == () -&gt; String &#123;</span><br><span class="line">func joinedResults(separator: String) -&gt; String &#123;</span><br><span class="line">return map &#123; $0() &#125;.joined(separator: separator)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">callbacks.callAll()</span><br><span class="line">let names = nameProviders.joinedResults(separator: &quot;, &quot;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用静态定义url</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let url: URL = &quot;https://www.swiftbysundell.com&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>weak或lazy属性应该设置readoonly</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Node &#123;</span><br><span class="line">private(set) weak var parent: Node?</span><br><span class="line">private(set) lazy var children = [Node]()</span><br><span class="line"></span><br><span class="line">func add(child: Node) &#123;</span><br><span class="line">children.append(child)</span><br><span class="line">child.parent = self</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Passing self to required Objective-C dependencies</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// Using lazy properties in Swift, you can pass self to required Objective-C dependencies without having to use force-unwrapped optionals.</span><br><span class="line"></span><br><span class="line">class DataLoader: NSObject &#123;</span><br><span class="line">lazy var urlSession: URLSession = self.makeURLSession()</span><br><span class="line"></span><br><span class="line">private func makeURLSession() -&gt; URLSession &#123;</span><br><span class="line">return URLSession(configuration: .default, delegate: self, delegateQueue: .main)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Renderer &#123;</span><br><span class="line">lazy var displayLink: CADisplayLink = self.makeDisplayLink()</span><br><span class="line"></span><br><span class="line">private func makeDisplayLink() -&gt; CADisplayLink &#123;</span><br><span class="line">return CADisplayLink(target: self, selector: #selector(screenDidRefresh))</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>结构体初始化时可设置self值，但其他方法修改self需要添加mutabling</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">extension Bool: AnswerConvertible &#123;</span><br><span class="line">public init(input: String) throws &#123;</span><br><span class="line">switch input.lowercased() &#123;</span><br><span class="line">case &quot;y&quot;, &quot;yes&quot;, &quot;👍&quot;:</span><br><span class="line">self = true</span><br><span class="line">default:</span><br><span class="line">self = false</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用extension来组织代码</p>
+</li>
+<li><p>使用set减少枚举时的if/else if使用! 高，真高！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class RoadTile: Tile &#123;</span><br><span class="line">var connectedDirections = Set&lt;Direction&gt;()</span><br><span class="line"></span><br><span class="line">func render() &#123;</span><br><span class="line">switch connectedDirections &#123;</span><br><span class="line">case [.up, .down]:</span><br><span class="line">image = UIImage(named: &quot;road-vertical&quot;)</span><br><span class="line">case [.left, .right]:</span><br><span class="line">image = UIImage(named: &quot;road-horizontal&quot;)</span><br><span class="line">default:</span><br><span class="line">image = UIImage(named: &quot;road&quot;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>协议可继承、可扩展！自然也就可重载、覆盖，然后就可以干点事情了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// Declare a public protocol that acts as your immutable API</span><br><span class="line">public protocol ModelHolder &#123;</span><br><span class="line">associatedtype Model</span><br><span class="line">var model: Model &#123; get &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Declare an extended, internal protocol that provides a mutable API</span><br><span class="line">internal protocol MutableModelHolder: ModelHolder &#123;</span><br><span class="line">var model: Model &#123; get set &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// You can now implement the requirements using &apos;public internal(set)&apos;</span><br><span class="line">public class UserHolder: MutableModelHolder &#123;</span><br><span class="line">public internal(set) var model: User</span><br><span class="line"></span><br><span class="line">internal init(model: User) &#123;</span><br><span class="line">self.model = model</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Converting Swift errors to NSError</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">case .some(let error as NSError) where error.code == NSURLErrorNotConnectedToInternet:</span><br><span class="line">presenter.showOfflineView()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lazy属性最好加上类型，外部调用最好加上self ！同时swift4也支持lazy的自动类型推断</p>
+</li>
+<li><p>静态依赖注入! 参数默认值的妙用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// Before: Almost impossible to test due to the use of singletons</span><br><span class="line"></span><br><span class="line">class Analytics &#123;</span><br><span class="line">static func log(_ event: Event) &#123;</span><br><span class="line">Database.shared.save(event)</span><br><span class="line"></span><br><span class="line">let dictionary = event.serialize()</span><br><span class="line">NetworkManager.shared.post(dictionary, to: eventURL)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// After: Much easier to test, since we can inject mocks as arguments</span><br><span class="line"></span><br><span class="line">class Analytics &#123;</span><br><span class="line">static func log(_ event: Event,</span><br><span class="line">database: Database = .shared,</span><br><span class="line">networkManager: NetworkManager = .shared) &#123;</span><br><span class="line">database.save(event)</span><br><span class="line"></span><br><span class="line">let dictionary = event.serialize()</span><br><span class="line">networkManager.post(dictionary, to: eventURL)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>以元组作为闭包的参数！好处：简单、可扩展且命名更规范</p>
+</li>
+<li><p>任何静态方法或属性都可以与点语法一起使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public enum RepeatMode &#123;</span><br><span class="line">case times(Int)</span><br><span class="line">case forever</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public extension RepeatMode &#123;</span><br><span class="line">static var never: RepeatMode &#123;</span><br><span class="line">return .times(0)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static var once: RepeatMode &#123;</span><br><span class="line">return .times(1)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">view.perform(animation, repeated: .once)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>参数的本地拷贝，swift中除了类是引用，其他都是值类型，即当做参数都是copy进入的let常量，这时候在函数内部使用，最好拷贝一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">init(repeatMode: RepeatMode, closure: @escaping () -&gt; UpdateOutcome) &#123;</span><br><span class="line">// Shadow the argument with a local, mutable copy</span><br><span class="line">var repeatMode = repeatMode</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>强大的where，可用于 协议、for in、case、catch、泛型 等，但if let、guard和while中被去掉了，使用 ，逗号分割不同条件</p>
+</li>
+<li>Extending optionals<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">func validateTextFields() -&gt; Bool &#123;</span><br><span class="line">guard !usernameTextField.text.isNilOrEmpty else &#123;</span><br><span class="line">return false</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">return true</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Since all optionals are actual enum values in Swift, we can easily</span><br><span class="line">// extend them for certain types, to add our own convenience APIs</span><br><span class="line"></span><br><span class="line">extension Optional where Wrapped == String &#123;</span><br><span class="line">var isNilOrEmpty: Bool &#123;</span><br><span class="line">switch self &#123;</span><br><span class="line">case let string?:</span><br><span class="line">return string.isEmpty</span><br><span class="line">case nil:</span><br><span class="line">return true</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Since strings are now Collections in Swift 4, you can even</span><br><span class="line">// add this property to all optional collections:</span><br><span class="line"></span><br><span class="line">extension Optional where Wrapped: Collection &#123;</span><br><span class="line">var isNilOrEmpty: Bool &#123;</span><br><span class="line">switch self &#123;</span><br><span class="line">case let collection?:</span><br><span class="line">return collection.isEmpty</span><br><span class="line">case nil:</span><br><span class="line">return true</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    焦正奎
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/10/27/复习swift：Swift-tips-tricks笔记上/" title="复习swift：Swift tips & tricks笔记上">http://yoursite.com/2018/10/27/复习swift：Swift-tips-tricks笔记上/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/10/Swift开发者必备Tips/" rel="next" title="Swift开发者必备Tips">
+                <i class="fa fa-chevron-left"></i> Swift开发者必备Tips
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/28/复习swift：Swift-tips-tricks笔记下/" rel="prev" title="复习swift：Swift tips & tricks笔记下">
+                复习swift：Swift tips & tricks笔记下 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="焦正奎">
+            
+              <p class="site-author-name" itemprop="name">焦正奎</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">焦正奎</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

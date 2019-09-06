@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 format123456#define NS_FORMAT_FUNCTION(F,A) __attribute__((format(__NSString__, F, A)))// “archetype”指定是哪种风格,这里是NSString；// “string-index”指定传入函数的第几个参数是格式化字符串；// “first-to-check”指定第一个可变参数所在的索引.format">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="__attribute__笔记">
+<meta property="og:url" content="http://yoursite.com/2017/03/21/attribute-笔记/index.html">
+<meta property="og:site_name" content="jiao﹢奎">
+<meta property="og:description" content="1 format123456#define NS_FORMAT_FUNCTION(F,A) __attribute__((format(__NSString__, F, A)))// “archetype”指定是哪种风格,这里是NSString；// “string-index”指定传入函数的第几个参数是格式化字符串；// “first-to-check”指定第一个可变参数所在的索引.format">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-06T14:52:21.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="__attribute__笔记">
+<meta name="twitter:description" content="1 format123456#define NS_FORMAT_FUNCTION(F,A) __attribute__((format(__NSString__, F, A)))// “archetype”指定是哪种风格,这里是NSString；// “string-index”指定传入函数的第几个参数是格式化字符串；// “first-to-check”指定第一个可变参数所在的索引.format">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/21/attribute-笔记/">
+
+
+
+
+
+  <title>__attribute__笔记 | jiao﹢奎</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jiao﹢奎</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/21/attribute-笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="焦正奎">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jiao﹢奎">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">__attribute__笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-21T18:14:18+08:00">
+                2017-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="1-format"><a href="#1-format" class="headerlink" title="1 format"></a>1 format</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#define NS_FORMAT_FUNCTION(F,A) __attribute__((format(__NSString__, F, A)))</span><br><span class="line"></span><br><span class="line">// “archetype”指定是哪种风格,这里是NSString；</span><br><span class="line">// “string-index”指定传入函数的第几个参数是格式化字符串；</span><br><span class="line">// “first-to-check”指定第一个可变参数所在的索引.</span><br><span class="line">format (archetype, string-index, first-to-check)</span><br></pre></td></tr></table></figure>
+<h4 id="2-availability"><a href="#2-availability" class="headerlink" title="2 availability"></a>2 availability</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NS_DEPRECATED_IOS(2_0, 7_0, &quot;Use -sizeWithAttributes:&quot;)</span><br><span class="line">// 宏展开以后如下</span><br><span class="line">__attribute__((availability(ios,introduced=2_0,deprecated=7_0,message=&quot;&quot;__VA_ARGS__)));</span><br><span class="line">// 例</span><br><span class="line">- (void)oldMethod:(NSString *)string __attribute__((availability(ios,introduced=2_0,deprecated=7_0,message=&quot;用 -newMethod: 这个方法替代 &quot;)));</span><br></pre></td></tr></table></figure>
+<h4 id="3-unavailable-amp-deprecated"><a href="#3-unavailable-amp-deprecated" class="headerlink" title="3 unavailable &amp; deprecated"></a>3 unavailable &amp; deprecated</h4><p>&emsp;&emsp;unavailable告诉编译器该方法不可用，如果强行调用编译器会提示错误<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (void)method1 NS_UNAVAILABLE;</span><br><span class="line">- (void)method2 __attribute__((unavailable(&quot;不能用了，&quot;)));</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;deprecated告诉用户方法被废弃，强行用提示警告<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (void)method1 DEPRECATED_ATTRIBUTE; </span><br><span class="line">- (void)method2:( NSString *)string __attribute__((deprecated(&quot;警告不要用了，可用xxx&quot;)));</span><br></pre></td></tr></table></figure></p>
+<h4 id="4-nonnull-amp-nullable"><a href="#4-nonnull-amp-nullable" class="headerlink" title="4 nonnull &amp; nullable"></a>4 nonnull &amp; nullable</h4><p>&emsp;&emsp;<a href="https://kangzubin.com/nullability-and-objective-c/" target="_blank" rel="noopener">参考</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 对于属性、方法返回值、方法参数的修饰，使用：nonnull/nullable；</span><br><span class="line">@property(nonatomic, copy, nullable) NSString *str;</span><br><span class="line">- (nullable NSString*)method;</span><br><span class="line">- (void)formatString:(nullable NSString *)str;</span><br><span class="line"></span><br><span class="line">// 对于 C 函数的参数、Block 的参数、Block 返回值的修饰，使用：_Nonnull/_Nullable</span><br><span class="line">- (void)methodWithBlock:(id _Nonnull (^ _Nullable)(id _Nullable params))block;</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-always-inline-强制内联，好像没啥用"><a href="#5-always-inline-强制内联，好像没啥用" class="headerlink" title="5 always_inline 强制内联，好像没啥用"></a>5 always_inline 强制内联，好像没啥用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">内联函数不是在调用时发生控制转移(没有寻址、压栈入栈等操作)，而是在编译时将函数体嵌入在每一个调用处</span><br><span class="line">好处是:快代码的执行，减少系统开销.适用场景:A 这个函数更小;B这个函数不被经常调用</span><br><span class="line">*/ </span><br><span class="line">// 内联函数的一般写法</span><br><span class="line">static inline void af_swizzleSelector(Class theClass, SEL originalSelector, SEL swizzledSelector) &#123;</span><br><span class="line">Method originalMethod = class_getInstanceMethod(theClass, originalSelector);</span><br><span class="line">Method swizzledMethod = class_getInstanceMethod(theClass, swizzledSelector);</span><br><span class="line">method_exchangeImplementations(originalMethod, swizzledMethod);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="6-objc-requires-super"><a href="#6-objc-requires-super" class="headerlink" title="6 objc_requires_super"></a>6 objc_requires_super</h4><p>&emsp;&emsp;子类复写父类方法时必须调用父类方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@interface Father : NSObject</span><br><span class="line">- (void)hailHydra __attribute__((objc_requires_super));</span><br><span class="line">@end</span><br><span class="line">@implementation Father</span><br><span class="line">- (void)hailHydra &#123;</span><br><span class="line">NSLog(@&quot;hail hydra!&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line">@interface Son : Father</span><br><span class="line">@end</span><br><span class="line">@implementation Son</span><br><span class="line">- (void)hailHydra &#123;</span><br><span class="line">&#125; // &lt;--- Warning missing [super hailHydra]</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></p>
+<h4 id="7-cleanup"><a href="#7-cleanup" class="headerlink" title="7 cleanup"></a>7 cleanup</h4><p>&emsp;&emsp;声明到一个变量上，当这个变量作用域结束时，调用指定的一个函数！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">int a __attribute__((cleanup(intCleanup))) = 10;</span><br><span class="line">&#125;</span><br><span class="line">/*</span><br><span class="line">注意点:</span><br><span class="line"></span><br><span class="line">指定的函数传递的参数是变量的地址</span><br><span class="line">作用域的结束包括:大括号结束、return、goto、break、exception等情况</span><br><span class="line">当作用域内有多个cleanup的变量时,遵守 先入后出 的栈式结构.</span><br><span class="line">*/</span><br><span class="line">//这里传递的参数是变量的地址</span><br><span class="line">void intCleanup(int *num)&#123;</span><br><span class="line">NSLog(@&quot;cleanup------%d&quot;,*num);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;,cleanup先于对象的dealloc执行。更多可看<a href="http://blog.sunnyxx.com/2014/09/15/objc-attribute-cleanup/" target="_blank" rel="noopener">黑魔法attribute((cleanup))</a></p>
+<h4 id="8-objc-subclassing-restricted"><a href="#8-objc-subclassing-restricted" class="headerlink" title="8 objc_subclassing_restricted"></a>8 objc_subclassing_restricted</h4><p>&esmp;&emsp;使用这个属性可以定义一个 Final Class，也就是说，一个不可被继承的类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__attribute__((objc_subclassing_restricted))</span><br><span class="line">@interface Eunuch : NSObject</span><br><span class="line">@end</span><br><span class="line">// 现在没人能继承Eunuch</span><br></pre></td></tr></table></figure></p>
+<h4 id="9-enable-if"><a href="#9-enable-if" class="headerlink" title="9 enable_if"></a>9 enable_if</h4><p>&esmp;&emsp;参数静态检查，只能用在C函数上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static void printValidAge(int age)</span><br><span class="line">__attribute__((enable_if(age &gt; 0 &amp;&amp; age &lt; 120, &quot;你丫火星人？&quot;))) &#123;</span><br><span class="line">printf(&quot;%d&quot;, age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="10-overloadable"><a href="#10-overloadable" class="headerlink" title="10 overloadable"></a>10 overloadable</h4><p>&esmp;&emsp;C函数实现类似java的重载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__attribute__((overloadable)) void print(NSString *string)&#123;</span><br><span class="line">NSLog(@&quot;%@&quot;,string);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__attribute__((overloadable)) void print(int num)&#123;</span><br><span class="line">NSLog(@&quot;%d&quot;,num);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="http://blog.sunnyxx.com/2016/05/14/clang-attributes/" target="_blank" rel="noopener">Clang Attributes 黑魔法小记</a></li>
+<li><a href="https://www.jianshu.com/p/29eb7b5c8b2d" target="_blank" rel="noopener"><strong>attribute</strong> 总结</a></li>
+<li><a href="https://kangzubin.com/nullability-and-objective-c/" target="_blank" rel="noopener">Objective-C 中 nullable、__nullable、_Nullable 的区别</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    焦正奎
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/03/21/attribute-笔记/" title="__attribute__笔记">http://yoursite.com/2017/03/21/attribute-笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/11/RN分享之后/" rel="next" title="RN分享之后">
+                <i class="fa fa-chevron-left"></i> RN分享之后
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/02/block/" rel="prev" title="__block">
+                __block <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="焦正奎">
+            
+              <p class="site-author-name" itemprop="name">焦正奎</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-format"><span class="nav-number">1.</span> <span class="nav-text">1 format</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-availability"><span class="nav-number">2.</span> <span class="nav-text">2 availability</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-unavailable-amp-deprecated"><span class="nav-number">3.</span> <span class="nav-text">3 unavailable &amp; deprecated</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-nonnull-amp-nullable"><span class="nav-number">4.</span> <span class="nav-text">4 nonnull &amp; nullable</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-always-inline-强制内联，好像没啥用"><span class="nav-number">5.</span> <span class="nav-text">5 always_inline 强制内联，好像没啥用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-objc-requires-super"><span class="nav-number">6.</span> <span class="nav-text">6 objc_requires_super</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-cleanup"><span class="nav-number">7.</span> <span class="nav-text">7 cleanup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-objc-subclassing-restricted"><span class="nav-number">8.</span> <span class="nav-text">8 objc_subclassing_restricted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-enable-if"><span class="nav-number">9.</span> <span class="nav-text">9 enable_if</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-overloadable"><span class="nav-number">10.</span> <span class="nav-text">10 overloadable</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number"></span> <span class="nav-text">参考</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">焦正奎</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

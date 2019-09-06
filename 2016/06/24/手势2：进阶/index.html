@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 UIGestureRecognizer&amp;emsp;&amp;emsp;手势识别器，前面介绍的基本手势的父类，注意UIGestureRecognizer : NSObject UIGestureRecognizerState 官方注释翻译 1234567UIGestureRecognizerStatePossible,   // 默认，还没识别，可能正在遍历runloopUIGestureRecogni">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手势2：进阶">
+<meta property="og:url" content="http://yoursite.com/2016/06/24/手势2：进阶/index.html">
+<meta property="og:site_name" content="jiao﹢奎">
+<meta property="og:description" content="1 UIGestureRecognizer&amp;emsp;&amp;emsp;手势识别器，前面介绍的基本手势的父类，注意UIGestureRecognizer : NSObject UIGestureRecognizerState 官方注释翻译 1234567UIGestureRecognizerStatePossible,   // 默认，还没识别，可能正在遍历runloopUIGestureRecogni">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-03T17:35:25.785Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手势2：进阶">
+<meta name="twitter:description" content="1 UIGestureRecognizer&amp;emsp;&amp;emsp;手势识别器，前面介绍的基本手势的父类，注意UIGestureRecognizer : NSObject UIGestureRecognizerState 官方注释翻译 1234567UIGestureRecognizerStatePossible,   // 默认，还没识别，可能正在遍历runloopUIGestureRecogni">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/06/24/手势2：进阶/">
+
+
+
+
+
+  <title>手势2：进阶 | jiao﹢奎</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jiao﹢奎</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/24/手势2：进阶/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="焦正奎">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jiao﹢奎">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">手势2：进阶</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-24T18:14:18+08:00">
+                2016-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-UIGestureRecognizer"><a href="#1-UIGestureRecognizer" class="headerlink" title="1 UIGestureRecognizer"></a>1 UIGestureRecognizer</h3><p>&emsp;&emsp;手势识别器，前面介绍的基本手势的父类，注意UIGestureRecognizer : NSObject</p>
+<h4 id="UIGestureRecognizerState"><a href="#UIGestureRecognizerState" class="headerlink" title="UIGestureRecognizerState"></a>UIGestureRecognizerState</h4><ul>
+<li><p>官方注释翻译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">UIGestureRecognizerStatePossible,   // 默认，还没识别，可能正在遍历runloop</span><br><span class="line">UIGestureRecognizerStateBegan,      // 手势开始被识别，下个runloop会回调方法</span><br><span class="line">UIGestureRecognizerStateChanged,    // 手势识别发生改变的状态，下个runloop会回调方法</span><br><span class="line">UIGestureRecognizerStateEnded,      // 手势识别结束，下个runloop会回调方法，重置为UIGestureRecognizerStatePossible</span><br><span class="line">UIGestureRecognizerStateCancelled,  // 手势识别取消，下个runloop会回调方法，重置为UIGestureRecognizerStatePossible</span><br><span class="line">UIGestureRecognizerStateFailed,     // 识别失败，方法将不会被调用，重置为UIGestureRecognizerStatePossible</span><br><span class="line">UIGestureRecognizerStateRecognized = UIGestureRecognizerStateEnded</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>UIGestureRecognizerStateChanged为啥总调</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://stackoverflow.com/questions/14227465/whats-the-different-between-uigesturerecognizerstatechanged-and-touchesmoved?r=SearchResults</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>是否手势都有UIGestureRecognizerStateBegan？否</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// UITapGestureRecognizer 只有一个UIGestureRecognizerStateEnded状态</span><br><span class="line"></span><br><span class="line">// UIGestureRecognizerState的官方解释如下</span><br><span class="line">// Discrete Gestures – gesture recognizers that recognize a discrete event but do not report changes (for example, a tap) do not transition through the Began and Changed states and can not fail or be cancelled</span><br><span class="line">// 非连续手势没有begin，changed的过渡，也不能失败或取消</span><br><span class="line"></span><br><span class="line">// 事实上UIGestureRecognizerState表示可能的状态，不要被begin，changed，end等字眼迷惑</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="几个容易乱的属性"><a href="#几个容易乱的属性" class="headerlink" title="几个容易乱的属性"></a>几个容易乱的属性</h4><ul>
+<li>@property(nullable, nonatomic,readonly) UIView *view; // 表示添加手势的view，并不是响应连上的view</li>
+<li>@property(nonatomic) BOOL cancelsTouchesInView; // 默认YES，即一旦响应手势就终止响应连</li>
+<li>@property(nonatomic) BOOL delaysTouchesBegan;// 默认为NO，不会延迟响应触摸事件，如果我们设置为YES，在手势没有被识别失败前，都不会给事件传递链发送消息。</li>
+<li>@property(nonatomic) BOOL delaysTouchesEnded;//默认为YES，手势识别失败立马调用touchEnd:withEvent。设置为NO，会等待一个很短的时间，如果没有接收到新的手势识别任务，才会发送touchesEnded消息到事件传递链。</li>
+</ul>
+<h4 id="iOS9之后的"><a href="#iOS9之后的" class="headerlink" title="iOS9之后的"></a>iOS9之后的</h4><ul>
+<li>@property(nonatomic, copy) NSArray<nsnumber *> *allowedTouchTypes NS_AVAILABLE_IOS(9_0); // Array of UITouchTypes as NSNumbers.</nsnumber></li>
+<li><p>@property(nonatomic, copy) NSArray<nsnumber *> *allowedPressTypes NS_AVAILABLE_IOS(9_0); // Array of UIPressTypes as NSNumbers.</nsnumber></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, UITouchType) &#123;</span><br><span class="line">UITouchTypeDirect,                       // A direct touch from a finger (on a screen)</span><br><span class="line">UITouchTypeIndirect,                     // An indirect touch (not a screen)</span><br><span class="line">UITouchTypePencil NS_AVAILABLE_IOS(9_1), // Add pencil name variant</span><br><span class="line">UITouchTypeStylus NS_AVAILABLE_IOS(9_1) = UITouchTypePencil, // A touch from a stylus (deprecated name, use pencil)</span><br><span class="line">&#125; NS_ENUM_AVAILABLE_IOS(9_0);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>@property (nonatomic) BOOL requiresExclusiveTouchType NS_AVAILABLE_IOS(9_2); // defaults to YES</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Indicates whether the gesture recognizer will consider touches of different touch types simultaneously.</span><br><span class="line">// If NO, it receives all touches that match its allowedTouchTypes.</span><br><span class="line">// NO, 同一时刻接收所有允许的触摸类型</span><br><span class="line">// If YES, once it receives a touch of a certain type, it will ignore new touches of other types, until it is reset to UIGestureRecognizerStatePossible.</span><br><span class="line">// YES, 同一时刻只接受一种触摸类型</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="两个方法"><a href="#两个方法" class="headerlink" title="两个方法"></a>两个方法</h4><ul>
+<li><p>设置手势优先级 requireGestureRecognizerToFail</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// [A requireGestureRecognizerToFail：B] 优先响应B，再尝试响应A，都失败的话则响应失败</span><br><span class="line"></span><br><span class="line">// 实现一个View，即响应双击，又响应单击</span><br><span class="line">// 参考：https://stackoverflow.com/questions/8876202/uitapgesturerecognizer-single-tap-and-double-tap?r=SearchResults</span><br><span class="line">- (void)addSingleAndDoubleTapGestureRecognizersToView:(UIView *)view &#123;</span><br><span class="line">// single tap    </span><br><span class="line">UITapGestureRecognizer *singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: tableViewController action: @selector(handleSingleTapOnView:)]; // must set 1                           </span><br><span class="line">[singleTapRecognizer setNumberOfTouchesRequired:1];</span><br><span class="line">[view addGestureRecognizer: singleTapRecognizer];</span><br><span class="line"></span><br><span class="line">// double tap </span><br><span class="line">UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: tableViewController action: @selector (handleDoubleTapOnView:)]; // must set 2</span><br><span class="line">[doubleTapRecognizer setNumberOfTouchesRequired:2];         </span><br><span class="line">[singleTapRecognizer requireGestureRecognizerToFail: doubleTapRecognizer];</span><br><span class="line">[view addGestureRecognizer: doubleTapRecognizer];         </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)handleSingleTapOnView:(id)sender&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)handleDoubleTapOnView:(id)sender&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手指在view中的位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 单点位置</span><br><span class="line">UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];</span><br><span class="line">[imageView addGestureRecognizer:tap];</span><br><span class="line">- (void)tap:(UITapGestureRecognizer *)tapGesture &#123;</span><br><span class="line">CGPoint location = [tapGesture locationInView:self.view];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 多根手指</span><br><span class="line">UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];</span><br><span class="line">tap.numberOfTouchesRequired = 2;</span><br><span class="line">[imageView addGestureRecognizer:tap];</span><br><span class="line">- (void)tap:(UITapGestureRecognizer *)tapGesture &#123;</span><br><span class="line">NSInteger touchsCount = [tapGesture numberOfTouches];</span><br><span class="line">for (int index = 0; index &lt; touchsCount; index++) &#123;</span><br><span class="line">CGPoint point = [tapGesture locationOfTouch:index inView:self.view];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-UIGestureRecognizerDelegate"><a href="#2-UIGestureRecognizerDelegate" class="headerlink" title="2 UIGestureRecognizerDelegate"></a>2 UIGestureRecognizerDelegate</h3><ul>
+<li><p>是否识别手势</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//将要开始时调用（Possible将要变成Began），返回NO，则手势识别失败</span><br><span class="line">- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;</span><br><span class="line"></span><br><span class="line">// touchesBegan:withEvent:之前调用，返回NO，则手势不识别这个touch</span><br><span class="line">- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch;</span><br><span class="line"></span><br><span class="line">// pressesBegan:withEvent:之前调用，返回NO，则手势不识别这个press</span><br><span class="line">- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceivePress:(UIPress *)press;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>多手势冲突怎么办</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//是否支持同时多个手势触发,默认NO</span><br><span class="line">//返回YES，则可以多个手势一起触发方法，返回NO则为互斥, 但不保证一定互斥，因为otherGestureRecognizer可能返回YES</span><br><span class="line">- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer </span><br><span class="line">shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)</span><br><span class="line">otherGestureRecognizer;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//返回YES，第二个手势的优先级高于第一个手势</span><br><span class="line">- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer </span><br><span class="line">shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)</span><br><span class="line">otherGestureRecognizer </span><br><span class="line"></span><br><span class="line">//返回YES，第一个手势的优先级高于第二个手势</span><br><span class="line">- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer </span><br><span class="line">shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)</span><br><span class="line">otherGestureRecognizer</span><br><span class="line"></span><br><span class="line">// 所以为什么要设置两个方法呢？一个方法返回YES或NO不就行了？因为返回YES能保证优先级改变，但返回NO不保证优先级，因为其他的可能返回NO</span><br><span class="line">// note: returning YES is guaranteed to set up the failure requirement. returning NO does not guarantee that there will not be a failure requirement as the other gesture&apos;s counterpart delegate or subclass methods may return YES</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="自定义手势"><a href="#自定义手势" class="headerlink" title="自定义手势"></a>自定义手势</h3><h4 id="1-组合"><a href="#1-组合" class="headerlink" title="1 组合"></a>1 组合</h4><ul>
+<li>通过组合多手势和优先级实现复杂手势操作<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// 略，参见上文 requireGestureRecognizerToFail 部分代码</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="2-扩展"><a href="#2-扩展" class="headerlink" title="2 扩展"></a>2 扩展</h4><ul>
+<li>实现一个只能横向或纵向的拖动手势<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 参考：https://stackoverflow.com/questions/7100884/uipangesturerecognizer-only-vertical-or-horizontal?r=SearchResults</span><br><span class="line"></span><br><span class="line">UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];</span><br><span class="line">pan.delegate = self;</span><br><span class="line">[imageView addGestureRecognizer:pan];</span><br><span class="line"></span><br><span class="line">- (void)pan:(UIPanGestureRecognizer *)panGesture &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer &#123;</span><br><span class="line">CGPoint velocity = [panGestureRecognizer velocityInView:self.view];</span><br><span class="line">return fabs(velocity.y) &gt; fabs(velocity.x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="3-自定义"><a href="#3-自定义" class="headerlink" title="3 自定义"></a>3 自定义</h4><ul>
+<li><p>主要步骤</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1、创建一个UIGestureRecognizer的子类</span><br><span class="line">2、包含头文件#import &lt;UIKit/UIGestureRecognizerSubclass.h&gt;</span><br><span class="line">3、使用touch相关方法判断手指轨迹</span><br><span class="line">- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;</span><br><span class="line">- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;</span><br><span class="line">- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;</span><br><span class="line">- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event;</span><br><span class="line">4、轨迹完成后设置self.state = UIGestureRecognizerStateEnded;就会自动调用相关回调</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例：实现一个松开调用的tap类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">// 参考: https://stackoverflow.com/questions/15628133/uitapgesturerecognizer-make-it-work-on-touch-down-not-touch-up?r=SearchResults</span><br><span class="line">TouchDownGestureRecognizer.h</span><br><span class="line"></span><br><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line"></span><br><span class="line">@interface TouchDownGestureRecognizer : UIGestureRecognizer</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">TouchDownGestureRecognizer.m</span><br><span class="line"></span><br><span class="line">#import &quot;TouchDownGestureRecognizer.h&quot;</span><br><span class="line">#import &lt;UIKit/UIGestureRecognizerSubclass.h&gt;</span><br><span class="line"></span><br><span class="line">@implementation TouchDownGestureRecognizer</span><br><span class="line">-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">if (self.state == UIGestureRecognizerStatePossible) &#123;</span><br><span class="line">self.state = UIGestureRecognizerStateRecognized;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">self.state = UIGestureRecognizerStateFailed;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">self.state = UIGestureRecognizerStateFailed;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">implementation:</span><br><span class="line"></span><br><span class="line">#import &quot;TouchDownGestureRecognizer.h&quot;</span><br><span class="line">TouchDownGestureRecognizer *touchDown = [[TouchDownGestureRecognizer alloc] initWithTarget:self action:@selector(handleTouchDown:)];</span><br><span class="line">[yourView addGestureRecognizer:touchDown];</span><br><span class="line"></span><br><span class="line">-(void)handleTouchDown:(TouchDownGestureRecognizer *)touchDown&#123;</span><br><span class="line">NSLog(@&quot;Down&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    焦正奎
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2016/06/24/手势2：进阶/" title="手势2：进阶">http://yoursite.com/2016/06/24/手势2：进阶/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/23/手势1：常用/" rel="next" title="手势1：常用">
+                <i class="fa fa-chevron-left"></i> 手势1：常用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/17/CoreGraphics1：基础/" rel="prev" title="CoreGraphics1：基础">
+                CoreGraphics1：基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="焦正奎">
+            
+              <p class="site-author-name" itemprop="name">焦正奎</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-UIGestureRecognizer"><span class="nav-number">1.</span> <span class="nav-text">1 UIGestureRecognizer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UIGestureRecognizerState"><span class="nav-number">1.1.</span> <span class="nav-text">UIGestureRecognizerState</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#几个容易乱的属性"><span class="nav-number">1.2.</span> <span class="nav-text">几个容易乱的属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iOS9之后的"><span class="nav-number">1.3.</span> <span class="nav-text">iOS9之后的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两个方法"><span class="nav-number">1.4.</span> <span class="nav-text">两个方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-UIGestureRecognizerDelegate"><span class="nav-number">2.</span> <span class="nav-text">2 UIGestureRecognizerDelegate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义手势"><span class="nav-number">3.</span> <span class="nav-text">自定义手势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-组合"><span class="nav-number">3.1.</span> <span class="nav-text">1 组合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-扩展"><span class="nav-number">3.2.</span> <span class="nav-text">2 扩展</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-自定义"><span class="nav-number">3.3.</span> <span class="nav-text">3 自定义</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">焦正奎</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

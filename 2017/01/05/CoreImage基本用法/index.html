@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 基础概念 Core Image，允许编写自定义滤镜与系统滤镜（或滤镜链）来处理静止和视频图像 一个滤镜是一个对象，有很多输入和输出，并执行一些变换。例如，模糊滤镜可能需要输入图像和一个模糊半径来产生适当的模糊后的输出图像。 一个滤镜图表是一个链接在一起的滤镜链条，使得一个滤镜的输出可以是另一个滤镜的输入。以这种方式，可以实现精心制作的效果。我们将在下面看到如何连接滤镜来创建一个复古的拍照效果。">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CoreImage基本用法">
+<meta property="og:url" content="http://yoursite.com/2017/01/05/CoreImage基本用法/index.html">
+<meta property="og:site_name" content="jiao﹢奎">
+<meta property="og:description" content="1 基础概念 Core Image，允许编写自定义滤镜与系统滤镜（或滤镜链）来处理静止和视频图像 一个滤镜是一个对象，有很多输入和输出，并执行一些变换。例如，模糊滤镜可能需要输入图像和一个模糊半径来产生适当的模糊后的输出图像。 一个滤镜图表是一个链接在一起的滤镜链条，使得一个滤镜的输出可以是另一个滤镜的输入。以这种方式，可以实现精心制作的效果。我们将在下面看到如何连接滤镜来创建一个复古的拍照效果。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-06T15:40:47.258Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CoreImage基本用法">
+<meta name="twitter:description" content="1 基础概念 Core Image，允许编写自定义滤镜与系统滤镜（或滤镜链）来处理静止和视频图像 一个滤镜是一个对象，有很多输入和输出，并执行一些变换。例如，模糊滤镜可能需要输入图像和一个模糊半径来产生适当的模糊后的输出图像。 一个滤镜图表是一个链接在一起的滤镜链条，使得一个滤镜的输出可以是另一个滤镜的输入。以这种方式，可以实现精心制作的效果。我们将在下面看到如何连接滤镜来创建一个复古的拍照效果。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/05/CoreImage基本用法/">
+
+
+
+
+
+  <title>CoreImage基本用法 | jiao﹢奎</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jiao﹢奎</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/05/CoreImage基本用法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="焦正奎">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jiao﹢奎">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CoreImage基本用法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-05T18:14:18+08:00">
+                2017-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-基础"><a href="#1-基础" class="headerlink" title="1 基础"></a>1 基础</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><ul>
+<li><a href="https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_intro/ci_intro.html#//apple_ref/doc/uid/TP30001185" target="_blank" rel="noopener">Core Image</a>，允许编写自定义滤镜与系统滤镜（或滤镜链）来处理静止和视频图像</li>
+<li>一个滤镜是一个对象，有很多输入和输出，并执行一些变换。例如，模糊滤镜可能需要输入图像和一个模糊半径来产生适当的模糊后的输出图像。</li>
+<li>一个滤镜图表是一个链接在一起的滤镜链条，使得一个滤镜的输出可以是另一个滤镜的输入。以这种方式，可以实现精心制作的效果。我们将在下面看到如何连接滤镜来创建一个复古的拍照效果。</li>
+<li>当多个滤镜连接成一个滤镜图表，Core Image 便把内核串在一起来构建一个可在 GPU 上运行的高效程序。只要有可能，Core Image 都会把工作延迟。通常情况下，直到滤镜图表的最后一个滤镜的输出被请求之前都不会发生分配或处理。</li>
+</ul>
+<h4 id="常用类"><a href="#常用类" class="headerlink" title="常用类"></a>常用类</h4><ul>
+<li>CIImage 保存图像数据的类，可以通过UIImage，图像文件或者像素数据来创建，包括未处理的像素数据。</li>
+<li>CIFilter 表示应用的滤镜，这个框架中对图片属性进行细节处理的类。系统提供的<a href="https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html" target="_blank" rel="noopener">滤镜列表</a></li>
+<li>CIContext 表示上下文，CoreImage的上下文也是实现对图像处理的具体对象。可以从其中取得图片的信息。建立一个上下文是非常昂贵的，所以你会经常想创建一个反复使用的上下文。接下来我们将看到如何创建一个上下文</li>
+</ul>
+<h3 id="2-使用"><a href="#2-使用" class="headerlink" title="2 使用"></a>2 使用</h3><ul>
+<li><p>基本用法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)filterImage:(UIImage *)originImage filterName:(NSString *)filterName &#123;</span><br><span class="line">/*</span><br><span class="line">注意： 直接使用originImage.CIImage获取CIImage可能为nil</span><br><span class="line">@property(nullable,nonatomic,readonly) CIImage *CIImage NS_AVAILABLE_IOS(5_0); // returns underlying CIImage or nil if CGImageRef based</span><br><span class="line">*/</span><br><span class="line">CIImage *ciImage = [[CIImage alloc] initWithImage:originImage];</span><br><span class="line">if (!ciImage) &#123;</span><br><span class="line">return originImage;</span><br><span class="line">&#125;</span><br><span class="line">// 创建滤镜</span><br><span class="line">CIFilter *filter = [CIFilter filterWithName:filterName keysAndValues:kCIInputImageKey, ciImage, nil];</span><br><span class="line">// 设置相关参数</span><br><span class="line">[filter setValue:@(10.f) forKey:@&quot;inputRadius&quot;];</span><br><span class="line">// 渲染并输出CIImage</span><br><span class="line">CIImage *outputImage = [filter outputImage];</span><br><span class="line">// 建立一个上下文是非常昂贵的，最好设成属性</span><br><span class="line">CIContext *context = [CIContext contextWithOptions:nil];</span><br><span class="line">/*</span><br><span class="line">注意： 直接 用UIImage *image = [UIImage imageWithCGImage:outputImage]; 也是可以的，</span><br><span class="line">但这种方法有点让人郁闷：如果你试图在一个 UIImageView 上显示这样的图像，其 contentMode 属性将被忽略。</span><br><span class="line">使用过渡的 CGImage 则需要一个额外的步骤，但可以省去这一烦恼。</span><br><span class="line">*/</span><br><span class="line">CGImageRef cgImage = [context createCGImage:outputImage fromRect:[outputImage extent]];</span><br><span class="line">UIImage *image = [UIImage imageWithCGImage:cgImage];</span><br><span class="line">// CIImage、CIFilter和CIContext都是继承NSObject，故只需要手动release CGImage</span><br><span class="line">CGImageRelease(cgImage);</span><br><span class="line">return image;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>滤镜太多记不住？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html</span><br><span class="line">按效果分类：</span><br><span class="line">kCICategoryDistortionEffect 扭曲效果，比如bump、旋转、hole</span><br><span class="line">kCICategoryGeometryAdjustment 几何开着调整，比如仿射变换、平切、透视转换</span><br><span class="line">kCICategoryCompositeOperation 合并，比如源覆盖（source over）、最小化、源在顶（source atop）、色彩混合模式</span><br><span class="line">kCICategoryHalftoneEffect Halftone效果，比如screen、line screen、hatched</span><br><span class="line">kCICategoryColorAdjustment 色彩调整，比如伽马调整、白点调整、曝光</span><br><span class="line">kCICategoryColorEffect 色彩效果，比如色调调整、posterize</span><br><span class="line">kCICategoryTransition 图像间转换，比如dissolve、disintegrate with mask、swipe</span><br><span class="line">kCICategoryTileEffect 瓦片效果，比如parallelogram、triangle</span><br><span class="line">kCICategoryGenerator 图像生成器，比如stripes、constant color、checkerboard</span><br><span class="line">kCICategoryGradient 渐变，比如轴向渐变、仿射渐变、高斯渐变</span><br><span class="line">kCICategoryStylize 风格化，比如像素化、水晶化</span><br><span class="line">kCICategorySharpen 锐化、发光</span><br><span class="line">kCICategoryBlur 模糊，比如高斯模糊、焦点模糊、运动模糊</span><br><span class="line"></span><br><span class="line">按使用场景分类：</span><br><span class="line">kCICategoryStillImage 用于静态图像</span><br><span class="line">kCICategoryVideo 用于视频</span><br><span class="line">kCICategoryInterlaced 用于交错图像</span><br><span class="line">kCICategoryNonSquarePixels 用于非矩形像素</span><br><span class="line">kCICategoryHighDynamicRange 用于HDR</span><br><span class="line">*/</span><br><span class="line">NSArray *names = [CIFilter filterNamesInCategory:kCICategoryBuiltIn];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>滤镜参数在哪里？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">// 特别注意入参的数据类型，通过KVC设置的，没类型检查，别弄错了</span><br><span class="line">CIFilter *filter = [CIFilter filterWithName:@&quot;CIMotionBlur&quot;];</span><br><span class="line">NSLog(@&quot;输入参数 : %@&quot;,[filter inputKeys]);</span><br><span class="line">NSLog(@&quot;输入参数的详细信息 : %@&quot;,[filter attributes]);</span><br><span class="line">NSLog(@&quot;输出参数 : %@&quot;,[filter outputKeys]);</span><br><span class="line">//    输入参数的详细信息</span><br><span class="line">//    &#123;</span><br><span class="line">//        &quot;CIAttributeFilterAvailable_Mac&quot; = &quot;10.4&quot;;</span><br><span class="line">//        &quot;CIAttributeFilterAvailable_iOS&quot; = &quot;8.3&quot;;</span><br><span class="line">//        CIAttributeFilterCategories =     (</span><br><span class="line">//                                           CICategoryBlur,</span><br><span class="line">//                                           CICategoryStillImage,</span><br><span class="line">//                                           CICategoryVideo,</span><br><span class="line">//                                           CICategoryBuiltIn</span><br><span class="line">//                                           );</span><br><span class="line">//        CIAttributeFilterDisplayName = &quot;Motion Blur&quot;;</span><br><span class="line">//        CIAttributeFilterName = CIMotionBlur;</span><br><span class="line">//        CIAttributeReferenceDocumentation = &quot;http://developer.apple.com/library/ios/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CIMotionBlur&quot;;</span><br><span class="line">//        inputAngle =     &#123;</span><br><span class="line">//            CIAttributeClass = NSNumber;</span><br><span class="line">//            CIAttributeDefault = 0;</span><br><span class="line">//            CIAttributeDescription = &quot;The angle of the motion determines which direction the blur smears.&quot;;</span><br><span class="line">//            CIAttributeDisplayName = Angle;</span><br><span class="line">//            CIAttributeIdentity = 0;</span><br><span class="line">//            CIAttributeSliderMax = &quot;3.141592653589793&quot;;</span><br><span class="line">//            CIAttributeSliderMin = &quot;-3.141592653589793&quot;;</span><br><span class="line">//            CIAttributeType = CIAttributeTypeAngle;</span><br><span class="line">//        &#125;;</span><br><span class="line">//        inputImage =     &#123;</span><br><span class="line">//            CIAttributeClass = CIImage;</span><br><span class="line">//            CIAttributeDescription = &quot;The image to use as an input image. For filters that also use a background image, this is the foreground image.&quot;;</span><br><span class="line">//            CIAttributeDisplayName = Image;</span><br><span class="line">//            CIAttributeType = CIAttributeTypeImage;</span><br><span class="line">//        &#125;;</span><br><span class="line">//        inputRadius =     &#123;</span><br><span class="line">//            CIAttributeClass = NSNumber;</span><br><span class="line">//            CIAttributeDefault = 20;</span><br><span class="line">//            CIAttributeDescription = &quot;The radius determines how many pixels are used to create the blur. The larger the radius, the blurrier the result.&quot;;</span><br><span class="line">//            CIAttributeDisplayName = Radius;</span><br><span class="line">//            CIAttributeIdentity = 0;</span><br><span class="line">//            CIAttributeMin = 0;</span><br><span class="line">//            CIAttributeSliderMax = 100;</span><br><span class="line">//            CIAttributeSliderMin = 0;</span><br><span class="line">//            CIAttributeType = CIAttributeTypeDistance;</span><br><span class="line">//        &#125;;</span><br><span class="line">//    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>是否需要指定OpenGL</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">使用nil方式创建基于 GPU 的 CIContext 对象是最优选择</span><br><span class="line">它内部的渲染器会根据设备最优选择。依次为 Metal，OpenGLES，CoreGraphics。</span><br><span class="line">*/ </span><br><span class="line">CIContext *context = [CIContext contextWithOptions: nil];</span><br><span class="line"></span><br><span class="line">// 强制使用OpenGL</span><br><span class="line">EAGLContext *eaglctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];</span><br><span class="line">context = [CIContext contextWithEAGLContext:eaglctx];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>参考：</p>
+<ul>
+<li><a href="https://objccn.io/issue-21-6/" target="_blank" rel="noopener">Core Image 介绍</a></li>
+<li><a href="https://github.com/FlexMonkey/Filterpedia" target="_blank" rel="noopener">Core Image Filter Explorer &amp; Showcase</a></li>
+<li><a href="http://colin1994.github.io/2016/10/21/Core-Image-OverView/?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="noopener">Core Image 你需要了解的那些事~</a></li>
+<li><a href="http://colin1994.github.io/2016/10/21/Core-Image-Custom-Filter/" target="_blank" rel="noopener">Core Image 之自定义 Filter~</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    焦正奎
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/01/05/CoreImage基本用法/" title="CoreImage基本用法">http://yoursite.com/2017/01/05/CoreImage基本用法/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/31/小狗钱钱/" rel="next" title="小狗钱钱">
+                <i class="fa fa-chevron-left"></i> 小狗钱钱
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/12/番茄工作法图解/" rel="prev" title="番茄工作法图解">
+                番茄工作法图解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="焦正奎">
+            
+              <p class="site-author-name" itemprop="name">焦正奎</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-基础"><span class="nav-number">1.</span> <span class="nav-text">1 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念"><span class="nav-number">1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用类"><span class="nav-number">1.2.</span> <span class="nav-text">常用类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用"><span class="nav-number">2.</span> <span class="nav-text">2 使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">焦正奎</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

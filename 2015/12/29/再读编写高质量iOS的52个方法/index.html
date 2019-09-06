@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="OC 的起源   在头文件中尽量少引入其他头文件   使用@class 将引入头文件的时机尽量延后，同时用于两个文件相互引用的问题。 用#import 不用#include 必要的时候用一个 .h 文件来整理用到的引用   可以用语法糖   要注意nil的情况，语法糖创建的都是不可变对象   多用类型常量，少用#define预处理指令   少用#define 用类似 static const C">
+<meta name="keywords" content="原创">
+<meta property="og:type" content="article">
+<meta property="og:title" content="再读编写高质量iOS的52个方法">
+<meta property="og:url" content="http://yoursite.com/2015/12/29/再读编写高质量iOS的52个方法/index.html">
+<meta property="og:site_name" content="jiao﹢奎">
+<meta property="og:description" content="OC 的起源   在头文件中尽量少引入其他头文件   使用@class 将引入头文件的时机尽量延后，同时用于两个文件相互引用的问题。 用#import 不用#include 必要的时候用一个 .h 文件来整理用到的引用   可以用语法糖   要注意nil的情况，语法糖创建的都是不可变对象   多用类型常量，少用#define预处理指令   少用#define 用类似 static const C">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-03T16:52:11.613Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="再读编写高质量iOS的52个方法">
+<meta name="twitter:description" content="OC 的起源   在头文件中尽量少引入其他头文件   使用@class 将引入头文件的时机尽量延后，同时用于两个文件相互引用的问题。 用#import 不用#include 必要的时候用一个 .h 文件来整理用到的引用   可以用语法糖   要注意nil的情况，语法糖创建的都是不可变对象   多用类型常量，少用#define预处理指令   少用#define 用类似 static const C">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/12/29/再读编写高质量iOS的52个方法/">
+
+
+
+
+
+  <title>再读编写高质量iOS的52个方法 | jiao﹢奎</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jiao﹢奎</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/12/29/再读编写高质量iOS的52个方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="焦正奎">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jiao﹢奎">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">再读编写高质量iOS的52个方法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-29T18:14:18+08:00">
+                2015-12-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书/" itemprop="url" rel="index">
+                    <span itemprop="name">读书</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ol>
+<li>OC 的起源</li>
+</ol>
+<ol start="2">
+<li>在头文件中尽量少引入其他头文件</li>
+</ol>
+<ul>
+<li>使用@class 将引入头文件的时机尽量延后，同时用于两个文件相互引用的问题。</li>
+<li>用#import 不用#include</li>
+<li>必要的时候用一个 .h 文件来整理用到的引用</li>
+</ul>
+<ol start="3">
+<li>可以用语法糖</li>
+</ol>
+<ul>
+<li>要注意nil的情况，语法糖创建的都是不可变对象</li>
+</ul>
+<ol start="4">
+<li>多用类型常量，少用#define预处理指令</li>
+</ol>
+<ul>
+<li>少用#define 用类似 static const CGFloat time = 0.3 ，如需要则在 .h 中使用extern CGFloat const time 声明为外部可用的</li>
+<li>常量在 .m 文件内用k开头，不过现在好像所有的都是k开头</li>
+<li>变量一定要同时用static和const来声明，const表示不能修改，static则表示该变量仅在定义此变量的编- - 译单元中可见，不加static在编译器会自动加external 外部符号，若此时在另外声明同名变量，则报错</li>
+</ul>
+<ol start="5">
+<li>用枚举表示状态选项状态码-fobjc-arc</li>
+</ol>
+<ul>
+<li>尽量不用enum 用NS_ENUM ，</li>
+<li>凡是以按位或操作的组合枚举都应使用NS_OPTIONS定义，枚举量对应的值可以用 1&lt;&lt;0 方便各选项通过“按位或”操作来组合。不需要互相组合则用NS_ENUM</li>
+<li>使用switch来区分枚举的时候，最好不要加上default语句，这样当新加一种枚举类型时，编译器会报错</li>
+</ul>
+<ol start="6">
+<li>理解属性这一概念</li>
+</ol>
+<ul>
+<li>@dynamic 阻止编译器自动合成getter和setter方法，但如果自己也不实现，编译器是不会报错的</li>
+<li>nonatomic   readwrite   readonly   assign   strong   weak  copy  unsafe_unretained  getter  setter</li>
+<li>iOS中使用同步锁开销很大，开发Mac OS X程序时使用同步锁却没事</li>
+</ul>
+<ol start="7">
+<li>在对象内部尽量直接访问实例变量</li>
+</ol>
+<ul>
+<li>直接用下划线访问属性，不会触发KVO，不经过getter和setter方法</li>
+<li>在getter和setter方法中不要出现self</li>
+<li>在初始化及dealloc方法中，总是应该直接通过实例变量来读写数据,在init和dealloc方法中避免时候用self.property</li>
+</ul>
+<ol start="8">
+<li>理解对象等同性这一概念</li>
+</ol>
+<ul>
+<li>== 判断内存是否相等， isEqual 判断对象是都相等</li>
+<li>相同对象必须有相同的哈希码，但两个哈希码相同的对象却未必相同</li>
+</ul>
+<ol start="9">
+<li>以类簇隐藏实现细节</li>
+</ol>
+<ul>
+<li>实现子类时，一定要注意父类指明覆盖的方法</li>
+</ul>
+<ol start="10">
+<li>在既有类中使用关联对象存放自定义数据</li>
+</ol>
+<ul>
+<li>objc_setAssociateObject    objc_getAssociatedObject  objc_removeAssociatedObjects</li>
+<li>慎用，很难发现也很难排查</li>
+</ul>
+<ol start="11">
+<li>理解objc_msgSend的作用</li>
+</ol>
+<ol start="12">
+<li>理解消息转发机制</li>
+</ol>
+<ul>
+<li>resolveInstanceMethod:  resolveClassMethod:</li>
+<li>forwardingTargetForSelector</li>
+<li>forwardInvocation</li>
+</ul>
+<ol start="13">
+<li><p>用方法调配技术（method swizzling）调试黑盒方法</p>
+</li>
+<li><p>理解类对象的用意</p>
+</li>
+</ol>
+<ul>
+<li>id本身就是指针，所以不用 *</li>
+<li>isMemberOfClass  isKindOfClass</li>
+</ul>
+<ol start="15">
+<li>用前缀避免命名空间冲突</li>
+</ol>
+<ul>
+<li>apple宣称其保留使用所有“两字母前缀”的权利，所以自己选用的前缀应该是三个字母及以上的</li>
+<li>项目中所有的方法、函数都最好加前缀</li>
+</ul>
+<ol start="16">
+<li>提供全能初始化方法</li>
+</ol>
+<ul>
+<li>必须要实现的，放到init里让对象实例化的时候就实现。（全能初始化）</li>
+<li>子类要包含父类全能初始化方法干的事。</li>
+<li>可以抛出异常来提醒，但不建议，OC中只有发生严重错误时，才应该抛出异常。、</li>
+</ul>
+<ol start="17">
+<li>实现description 方法</li>
+</ol>
+<ul>
+<li>重写description 方法能自定义打印内容，其实可以Hook一下让所有的类以及其属性值都打印出来，不过暂时没必要。</li>
+<li>debugDescription 是开发者在调试器中以控制台命令打印对象时才调用。</li>
+</ul>
+<ol start="18">
+<li>尽量使用不可变对象</li>
+</ol>
+<ul>
+<li>尽量少的暴露属性，即便暴露属性也要尽量设置为只读的。</li>
+<li>暴露的readonly属性最好设置内存管理，并在内部重新声明为readwrite，避免正在写的时候外面有人在读，必要的时候可以用dispatch_sync 将存取操作设置为同步操作。</li>
+<li>不要暴露可变的collection属性，应该提供相关方法修改内部可变的collection，而在公开属性中getter方法中对内部可变的copy操作。</li>
+</ul>
+<ol start="19">
+<li>使用清晰而协调的命名方式</li>
+</ol>
+<ul>
+<li>如果方法的返回值是新创建的，那么方法名的首个词应是返回值类型。</li>
+<li>应该把表示参数类型的名词放在参数前面。</li>
+<li>如果方法要在当前对象上执行凑走，那么久应该包含动词；若执行操作时还需要参数，则应该在动词后面加上一个或多个名词。</li>
+<li>不要使用str这种简称，应该用string这样的全称。</li>
+<li>BOOL属性应加is前缀。如果某方法返回非属性的BOOL值，那么应该根据其功能，选用has或is当前缀。</li>
+<li>将get这个前缀留给那些借由“输出参数”来保存返回值的方法。</li>
+</ul>
+<ol start="20">
+<li>为私有方法名加前缀</li>
+</ol>
+<ul>
+<li>不要用下划线作为前缀定义私有方法，因为这是预留给苹果公司用的。</li>
+<li>可以将使用的类名前缀用作私有方法前缀来避免冲突。</li>
+</ul>
+<ol start="21">
+<li>理解Objective-C错误类型</li>
+</ol>
+<ul>
+<li>如果抛出异常，那么本应该在作用域末尾释放的对象现在却不会自动释放，即便不用ARC，也很难写出在抛出异常时不会导致内存泄漏的代码</li>
+<li>OC采用的做法：只在极其罕见（致命）的情况下抛出异常，异常抛出之后，无须考虑恢复问题，而且应用程序此时也应该退出。</li>
+<li>如果父类强制子类实现某方法，可以在父类对应方法里抛出异常。</li>
+<li>出现不非致命错误是OC一般让方法返回nil，或者使用NSError。</li>
+<li>NSError一般通过(NSError<strong>)error 这种输出参数来返回。实际上编译器会将NSError</strong>转换成NSError<em> _ _ autoreleasing</em> ,也就是说指针所指的对象会这方法执行完毕后自动释放。</li>
+</ul>
+<ol start="22">
+<li>理解NSCopying协议</li>
+</ol>
+<ul>
+<li>自己的类支持拷贝操作，就需要实现NSCopying协议。copyWithZone方法中zone参数是因为以前是按zone（区）来划分的，但现在都是使用default zone，因此可以不用管zone参数。</li>
+<li>非属性的内部使用实例，可以通过 -&gt; 语法</li>
+<li>mutableCopy   copy  区别</li>
+</ul>
+<ol start="23">
+<li>通过委托与数据源协议进行对象间通信</li>
+</ol>
+<ul>
+<li>delegate 属性要定义成weak，而不是strong的。</li>
+<li>@optional</li>
+</ul>
+<ol start="24">
+<li>将类的实现代码分散到便于管理的数个分类之中</li>
+</ol>
+<ul>
+<li>将应该视为“私有”的方法归入名为private的分类中以隐藏实现细节。</li>
+</ul>
+<ol start="25">
+<li>总是为第三方类的分类名称加前缀</li>
+</ol>
+<ul>
+<li>如果相同属性或方法，分类会覆盖原来的，而且很可能覆盖很多次。。。解决的办法就是加前缀。</li>
+</ul>
+<ol start="26">
+<li>勿在分类中声明属性</li>
+</ol>
+<ul>
+<li>把封装数据所用到的全部属性都定义在主接口里</li>
+</ul>
+<ol start="27">
+<li>使用“class-continuation分类”隐藏实现细节</li>
+</ol>
+<ul>
+<li>必须定义在其接续的那个类的实现文件里，没有名字；并且是唯一能声明实例变量的分类  @interface Person() {  // something  }</li>
+<li>非公开的属性最好写在class-continuation</li>
+</ul>
+<ol start="28">
+<li>通过协议提供匿名对象</li>
+</ol>
+<ul>
+<li>@property (nonatomic , weak) id <somedelegate> delegate;  id <somedelegate>就是匿名对象</somedelegate></somedelegate></li>
+<li>协议可在某种程度上提供匿名类型，具体的对象类型可以淡化成遵从某协议的id类型，协议里规定了对象所应实现的方法</li>
+<li>使用匿名对象类隐藏类型名称（或类名）</li>
+<li>如果具体类型不重要，重要的是对象能够响应（定义在协议里的）特定方法，那么可以用匿名对象来表示。</li>
+</ul>
+<ol start="29">
+<li>理解引用计数</li>
+</ol>
+<ul>
+<li>retainCount方法不太准，不建议使用。</li>
+<li>保留环，一则般需要设置weak处理，block的循环引用则用_ _weak     _ _strong    _ _block来处理</li>
+</ul>
+<ol start="30">
+<li><p>以  ARC简化引用计数</p>
+</li>
+<li><p>在dealloc方法中只释放引用并解除监听</p>
+</li>
+</ol>
+<ul>
+<li>不应该自己调用dealloc，虽然非ARC用调 [super dealloc]，但ARC不用。应该做的就是释放引用，取消订阅或KVO</li>
+<li>错误，异常，对于一些特殊操作很重要，提醒释放内存。</li>
+<li>系统并不保证每个创建出来的对象的dealloc都会执行。</li>
+<li>编写dealloc方法时，不要在里面随便调用其他方法。</li>
+<li>dealloc里也不要调用属性的存取方法</li>
+</ul>
+<ol start="32">
+<li>编写“异常安全代码”时留意内存管理问题</li>
+</ol>
+<ul>
+<li>@try {} @catch {} @finally {}  捕获异常时，一定要注意将try块内所创立的对象清理干净。</li>
+<li>默认情况下,ARC不生成安全处理异常所需的清理代码，开启编译器标志 –fobjc-arc-exceptions 后，可以生成清理代码，但开启后将导致程序变大，而且会降低运行效率。</li>
+</ul>
+<ol start="33">
+<li>以若引用避免保留环</li>
+</ol>
+<ul>
+<li>避免保留环的最佳方式就是弱引用。</li>
+<li>weak 、assign 和 unsafe_unretained</li>
+</ul>
+<ol start="34">
+<li>以自动释放池块降低内存峰值</li>
+</ol>
+<ul>
+<li>通常只有一个地方需要创建自动释放池 @autoreleasepoll { // dosomething }，那就是在main函数里面</li>
+<li>自动释放池可以嵌套，可以控制应用程序峰值</li>
+<li>自动释放池的释放要等线程下一次runloop时才会清空</li>
+</ul>
+<ol start="35">
+<li><p>用僵尸对象调试内存管理</p>
+</li>
+<li><p>不用使用retainCount</p>
+</li>
+</ol>
+<ul>
+<li>ARC已经废弃此方法，即便非ARC此方法获取的值也不准。</li>
+</ul>
+<ol start="37">
+<li>理解“块”这一概念</li>
+</ol>
+<ul>
+<li>int (^addBlock)(int a , int b) = ^(int a, int b){ return a+ b; };</li>
+<li>Block捕获的变量在块内是不可变的，需要改的用_ _block修饰</li>
+<li>_ _weak  _ _strong </li>
+<li>定义Block的内存是分配在栈区，离开相应的范围之后，编译器有可能把分配给块的内存覆盖掉，因此需要用copy，拷贝到堆区当做一个一对象处理，拥有引用计数</li>
+<li>全局块不会捕捉任何状态，运行时也无须状态来参与，声明在全局内存区，因此拷贝是个空操作，故全局块绝不可能为紫铜所收回，这种块实际上相当于单例。</li>
+</ul>
+<ol start="38">
+<li>为常用的块类型创建typedef</li>
+</ol>
+<ul>
+<li>块的类型有参数和返回值组成。</li>
+</ul>
+<ol start="39">
+<li>用handler块降低代码分散程度</li>
+</ol>
+<ul>
+<li>系统发现某个应用程序的主线程已经阻塞了一段时间后，就会令其停止。</li>
+<li>建议使用同一个块来处理成功与失败的情况。</li>
+<li>应该由调用API的人来决定handler应该运行在哪个线程上。</li>
+</ul>
+<ol start="40">
+<li>用块引用其所属对象时不要出现保留环</li>
+</ol>
+<ul>
+<li>一定要找个适当的时间解除保留环，而不能把责任推给API的调用者。</li>
+</ul>
+<ol start="41">
+<li>多用派发队列，少用同步锁</li>
+</ol>
+<ul>
+<li>@synchronized(self) 同步锁，会降低代码效率，因为共用同一个锁的那些同步块，都必须按顺序执行。</li>
+<li>NSLock</li>
+<li>安全高效代替同步块和锁对象的是 串行同步队列</li>
+<li>执行异步派发时，需要拷贝块</li>
+<li>dispatch_barrier_async  dispatch_barrier_sync</li>
+</ul>
+<ol start="42">
+<li>多用GCD，少用performSelector系列方法</li>
+</ol>
+<ul>
+<li>用performSelector 调用一个方法，编译器并不知道将要调用的方法，也就不了解其方法签名以及返回值情况，所以没办法运用ARC的内存管理规则来判定返回值是不是应该释放，鉴于此，ARC采用了比较谨慎的做法，就是不添加释放操作，然而这么做可能导致内存泄漏。</li>
+<li>一般返回只能是void或对象类型，而performSelector返回的是id类型，那么就需要执行一些转换操作，很容易出错！若返回类型为C的结构体，则不可使用performSelector方法。</li>
+<li>没机会为被调用的方法指定参数，被调用的selec的输入可能指向位置的垃圾内存</li>
+<li>如果跨线程执行，最好不用performSelector，而用GCD</li>
+</ul>
+<ol start="43">
+<li>掌握GCD及操作队列的使用时机</li>
+</ol>
+<ul>
+<li>GCD是纯C的API，而操作队列则是Ojbective-C的对象。</li>
+<li>NSOperation 运行之前，可以取消某个操作（但已经启动的无法取消）；可指定操作间依赖关系；通过KVO观察属性；指定操作的优先级（GCD可以控制队列的优先级，不是块的）</li>
+</ul>
+<ol start="44">
+<li>通过Dispatch Group机制，根据系统资源状况来执行任务</li>
+</ol>
+<ul>
+<li>dispatch_group_t  dispatch_group_async  dispatch_group_enter  dispatch_group_leave  dispatch_group_wait  dispatch_group_notify</li>
+</ul>
+<ol start="45">
+<li>使用dispatch_once来执行只需运行一次的线程安全代码</li>
+</ol>
+<ul>
+<li>标记应该声明static或global作用域中，而且每次标记应该相同</li>
+</ul>
+<ol start="46">
+<li>不要使用dispatch_get_current_queue</li>
+</ol>
+<ul>
+<li>iOS6 之后已经弃用dispatch_get_current_queue，极其容易造成死锁</li>
+<li>典型错误用法：用dispatch_get_current_queue检测当前队列是不是某个特定队列，试图避免执行同步派发时可能遭遇的死锁问题。</li>
+<li>由于派发队列是按层级来组织的，所以无法单用某个队列对象来描述“当前队列”这一概念。</li>
+</ul>
+<ol start="47">
+<li><p>熟悉系统框架</p>
+</li>
+<li><p>多用块枚举，少用for循环、</p>
+</li>
+</ol>
+<ul>
+<li>块枚举法，本身就能通过NSEnumerationOptions 配置GCD来并发执行遍历操作。</li>
+<li>若提前知道待遍历对象类型，则应修改块签名，指出对象的具体类型。</li>
+</ul>
+<ol start="49">
+<li>对自定义其内存管理语义的collection使用无缝桥接</li>
+</ol>
+<ul>
+<li>_ <em>bridge 本身的意思是：ARC仍然具备这个OC对象的所有权，而</em> _bridge_retained意味着ARC将交出对象的所有权</li>
+</ul>
+<ol start="50">
+<li>构建缓存时选用NSCache而非NSDictionary</li>
+</ol>
+<ul>
+<li>当系统资源将要耗尽时，NSCache可以自动删减缓存。</li>
+<li>NSCache并不会“拷贝”键，而是会“保留”它。</li>
+<li>NSCache是线程安全的，不加锁多个线程也可以同时访问。</li>
+</ul>
+<ol start="51">
+<li>精简initialize与load的实现代码</li>
+</ol>
+<ul>
+<li>当包含类或分类的程序载入系统时会调用load方法，而且只会调一次。如果类和分类都实现了load方法，则先调类的，再调分类的。</li>
+<li>load方法中使用其他类是不安全的，因为比先执行超类的load方法，而根据某个给定的程序库却无法判断出其中各个类的载入顺序。</li>
+<li>load方法并不像普通方法那样，如果某个类本身没实现load方法，那么不管其各级超类是否实现此方法，系统都不会调用</li>
+<li>load方法必须实现的精简，因为整个应用程序在执行load方法时都会阻塞。</li>
+<li><ul>
+<li>(void) initialize   与 – (void) init 不一样</li>
+</ul>
+</li>
+<li><ul>
+<li>(void) initialize 对于每个类来说，该方法会在程序首次用该类之前调用，且只调用一次。它是由运行期系统来调用的，绝不应该通过代码直接调用。</li>
+</ul>
+</li>
+<li><ul>
+<li>(void) initialize方法时惰性调用的，用不到的类不会运行，但load方法是程序会一直阻塞到所有类的load都执行完。</li>
+</ul>
+</li>
+<li><ul>
+<li>(void) initialize 与其他方法一样，如果某个类未实现它，而超类实现了，则运行超类的实现代码。</li>
+</ul>
+</li>
+<li><ul>
+<li>(void) initialize 方法要尽量精简，只应该用来设置内部数据，不应该调用其他方法，即便是本类自己的方法最好也别调用；若某个全局状态无法再编译期间初始化，则可放到initialize里来做。</li>
+</ul>
+</li>
+</ul>
+<ol start="52">
+<li>别忘了NSTimer会保留其目标对象</li>
+</ol>
+<ul>
+<li>设置成重复执行模式计时器，很容易引入保留环</li>
+<li>self.timer  设置self为target  就产生了保留环。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    焦正奎
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2015/12/29/再读编写高质量iOS的52个方法/" title="再读编写高质量iOS的52个方法">http://yoursite.com/2015/12/29/再读编写高质量iOS的52个方法/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/19/毛玻璃效果代码/" rel="next" title="毛玻璃效果代码">
+                <i class="fa fa-chevron-left"></i> 毛玻璃效果代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/01/视图更新的几个方法/" rel="prev" title="视图更新的几个方法">
+                视图更新的几个方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="焦正奎">
+            
+              <p class="site-author-name" itemprop="name">焦正奎</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">焦正奎</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
