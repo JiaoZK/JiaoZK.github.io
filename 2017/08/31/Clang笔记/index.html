@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;前一段时间学了下LLVM的知识，LLVM非常强大，确实很好玩！但学起来确实挺多挺枯燥的，也没发现有什么用处（其实就是啃不动英文文档了），过了刚开始的冲劲也就停滞不前了，平时开发还是Clang用的稍微多一点，今天就水水clang吧 1 简介&amp;emsp;&amp;emsp;Clang 是 LLVM 的子项目，是 C，C++ 和 Objective-C 编译器，目的是提供惊人的快速编译，">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clang笔记">
+<meta property="og:url" content="http://jiaozhengkui.top/2017/08/31/Clang笔记/index.html">
+<meta property="og:site_name" content="焦正奎的博客">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;前一段时间学了下LLVM的知识，LLVM非常强大，确实很好玩！但学起来确实挺多挺枯燥的，也没发现有什么用处（其实就是啃不动英文文档了），过了刚开始的冲劲也就停滞不前了，平时开发还是Clang用的稍微多一点，今天就水水clang吧 1 简介&amp;emsp;&amp;emsp;Clang 是 LLVM 的子项目，是 C，C++ 和 Objective-C 编译器，目的是提供惊人的快速编译，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-06T15:27:38.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Clang笔记">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;前一段时间学了下LLVM的知识，LLVM非常强大，确实很好玩！但学起来确实挺多挺枯燥的，也没发现有什么用处（其实就是啃不动英文文档了），过了刚开始的冲劲也就停滞不前了，平时开发还是Clang用的稍微多一点，今天就水水clang吧 1 简介&amp;emsp;&amp;emsp;Clang 是 LLVM 的子项目，是 C，C++ 和 Objective-C 编译器，目的是提供惊人的快速编译，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jiaozhengkui.top/2017/08/31/Clang笔记/">
+
+
+
+
+
+  <title>Clang笔记 | 焦正奎的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">焦正奎的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jiaozhengkui.top/2017/08/31/Clang笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jiaozhengkui@163.com">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="焦正奎的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Clang笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-31T18:14:18+08:00">
+                2017-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;&emsp;前一段时间学了下LLVM的知识，LLVM非常强大，确实很好玩！但学起来确实挺多挺枯燥的，也没发现有什么用处（其实就是啃不动英文文档了），过了刚开始的冲劲也就停滞不前了，平时开发还是Clang用的稍微多一点，今天就水水clang吧</p>
+<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1 简介"></a>1 简介</h3><p>&emsp;&emsp;Clang 是 LLVM 的子项目，是 C，C++ 和 Objective-C 编译器，目的是提供惊人的快速编译，比 GCC 快3倍，其中的 clang static analyzer主要是进行语法分析，语义分析和生成中间代码，当然这个过程会对代码进行检查，出错的和需要警告的会标注出来。<a href="http://clang.llvm.org/get_started.html" target="_blank" rel="noopener">官方入门</a>,详细内容参考：<a href="http://clang.llvm.org" target="_blank" rel="noopener">官网</a> </p>
+<p>&emsp;&emsp;Clang是基于库的，在Clang的官方文档<a href="http://clang.llvm.org/docs/InternalsManual.html" target="_blank" rel="noopener">“Clang” CFE Internals Manual</a>中，对Clang内部的介绍也是依据库来进行分类的。</p>
+<h4 id="1-1-AST"><a href="#1-1-AST" class="headerlink" title="1.1 AST"></a>1.1 AST</h4><p>&emsp;&emsp;一般编译器有以下工作步骤：</p>
+<ul>
+<li>词法分析（Lexical analysis）：此阶段的任务是从左到右一个字符一个字符地读入源程序，对构成源程序的字符流进行扫描然后根据构词规则识别 单词（Token），完成这个任务的组件是 词法分析器（Lexical analyzer，简称Lexer），也叫 扫描器（Scanner）；</li>
+<li>语法分析（Syntactic analysis，也叫 Parsing）： 此阶段的主要任务是由 词法分析器 生成的单词构建 抽象语法树（Abstract Syntax Tree ，AST），完成此任务的组件是 语法分析器（Parser）；</li>
+<li>目标码生成： 此阶段编译器会遍历上一步生成的抽象语法树，然后为每个节点生成 机器 / 字节码。</li>
+<li>编译器完成编译后，由链接器（Linker）将生成的目标文件链接成可执行文件，这一步并不是必须的，一些依赖于虚拟机运行的语言（如 Java，Erlang）就不需要链接。</li>
+</ul>
+<p>&emsp;&emsp;关于Clang AST，有一个<a href="http://clang.llvm.org/docs/IntroductionToTheClangAST.html" target="_blank" rel="noopener">官方文档</a> 。基于AST可以进行程序转换，现在Clang下面已经有一些额外的工具：比如clang-modernize实现的就是对C+ +程序中可以使用C ++ 11的地方进行转换，转换成在这些地方使用C++11特性的程序，等于直接在程序上进行的修改，是一个source-to-source的转换工具。</p>
+<h4 id="1-2-libclang"><a href="#1-2-libclang" class="headerlink" title="1.2 libclang"></a>1.2 libclang</h4><p>&emsp;&emsp;现在的Clang，不仅仅是一个编译器前端，同时也可以作为一个库使用。作为一个库使用的时候，可以用它去分析C/C++/ObjectC语言代码，可以分析源码得到AST，也可以获取已经分析好的AST，也可以遍历AST，还可以获取AST中基本元素的物理源码位置。这就是libclang。</p>
+<p>&emsp;&emsp;其它库介绍：</p>
+<ul>
+<li>LLVM Support Library - LLVM libSupport 库提供了许多底层库和数据结构，包括命令行 option 处理，各种容器和系统抽象层，用于文件系统访问。</li>
+<li>The Clang “Basic” Library - 提供了跟踪和操纵 source buffers，source buffers 的位置，diagnostics，tokens,抽象目标以及编译语言子集信息的 low-level 实用程序。还有部分可以用在其他的非 c 语言比如 SourceLocation，SourceManager，Diagnositics，FileManager 等。其中 Diagnositics 这个子系统是编译器和普通写代码人交流的主要组成部分，它会诊断当前代码哪些不正确，按照严重程度而产生 WARNING 或 ERROR，每个诊断会有唯一 ID ， SourceLocation 会负责管理。</li>
+<li>The Driver Library - 和 Driver 相关的库，上面已经对其做了详细的介绍。</li>
+<li>Precompiled Headers - Clang 支持预编译 headers 的两个实现。</li>
+<li>The Frontend Library - 这个库里包含了在 Clang 库之上构建的功能，比如输出 diagnositics 的几种方法。</li>
+<li>The Lexer and Preprocessor Library - 词法分析和预处理的库，包含了 Token，Annotation Tokens，TokenLexer，Lexer 等词法类，还有 Parser Library 和 AST 语法树相关的比如 Type，ASTContext，QualType，DeclarationName，DeclContext 以及 CFG 类。</li>
+<li>The Sema Library - 解析器调用此库时，会对输入进行语义分析。 对于有效的程序，Sema 为解析构造一个 AST。</li>
+<li>The CodeGen Library - CodeGen 用 AST 作为输入，并从中生成 LLVM IR 代码。</li>
+</ul>
+<h4 id="1-3-Clang-driver"><a href="#1-3-Clang-driver" class="headerlink" title="1.3 Clang driver"></a>1.3 Clang driver</h4><p>&emsp;&emsp;Clang driver是一个驱动，一个包含编译全部阶段的驱动，不同于前端Clang，也不同于编译器Clang。命令行使用的“clang”其实并不是前端Clang，而是指的是Clang driver；在命令行使用的“Clang cc1”也指的不是前端Clang，而指的是Clang编译器，这其中不仅包含了前端Clang，还包含了LLVM Core部分等。Clang driver不仅仅调用了前端Clang，同时还调用了LLVM Core</p>
+<h3 id="Clang命令（大小写敏感）"><a href="#Clang命令（大小写敏感）" class="headerlink" title="Clang命令（大小写敏感）"></a>Clang命令（大小写敏感）</h3><h4 id="命令解释"><a href="#命令解释" class="headerlink" title="命令解释"></a>命令解释</h4><p>&emsp;&emsp;最重要的命令是什么？我个人认为，无论什么脚本语言，最重要的命令永远是<strong>帮助</strong>：clang –help。Clang命令高达700+，这里仅介绍常用的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">USAGE: clang [options] &lt;inputs&gt;</span><br><span class="line"></span><br><span class="line">OPTIONS:</span><br><span class="line">-###                    Print (but do not run) the commands to run for this compilation 查看操作内部命令，一般用于分析流程</span><br><span class="line">--analyze               Run the static analyzer 运行静态代码检查器</span><br><span class="line">-B &lt;dir&gt;                Add &lt;dir&gt; to search path for binaries and object files used implicitly 将&lt;dir&gt;添加到搜索路径</span><br><span class="line">-CC                     Include comments from within macros in preprocessed output 在预处理的输出中包含宏在内的注释，非常重要</span><br><span class="line">--config &lt;value&gt;        Specifies configuration file  配置文件</span><br><span class="line">-C                      Include comments in preprocessed output 在预处理的输出中包含注释，非常重要</span><br><span class="line">-c                      Only run preprocess, compile, and assemble steps 仅运行预处理、编译和组装步骤</span><br><span class="line">-emit-ast               Emit Clang AST files for source inputs</span><br><span class="line">-E                      Only run the preprocessor 只运行预处理</span><br><span class="line">-fblocks                Enable the &apos;blocks&apos; language feature</span><br><span class="line">-fcolor-diagnostics     Use colors in diagnostics 诊断中可以使用颜色</span><br><span class="line">-fcxx-exceptions        Enable C++ exceptions  启用C++类型异常</span><br><span class="line">-fexceptions            Enable support for exception handling 启用异常</span><br><span class="line">-fmodules               Enable the &apos;modules&apos; language feature 启用“模块”语言功能</span><br><span class="line">-fplugin=&lt;dsopath&gt;      Load the named plugin (dynamic shared object) 启用插件</span><br><span class="line">-ObjC++                 Treat source input files as Objective-C++ inputs 把源文件当做OC++</span><br><span class="line">-ObjC                   Treat source input files as Objective-C inputs 把源文件当做OC</span><br><span class="line">-g                      Generate source-level debug information 生成完整的调试信息。</span><br><span class="line">-o &lt;file&gt;               Write output to &lt;file&gt; 输出文件</span><br><span class="line">-print-file-name=&lt;file&gt; Print the full library path of &lt;file&gt; 输出文件所在路径</span><br><span class="line">-print-ivar-layout      Enable Objective-C Ivar layout bitmap print trace 启用OC的ivar布局</span><br><span class="line">-pthread                Support POSIX threads in generated code 在生成的代码中支持POSIX线程</span><br><span class="line">-rewrite-objc           Rewrite Objective-C source to C++ 将OC重写成C++</span><br><span class="line">-S                      Only run preprocess and compilation steps 仅运行预处理和编译步骤</span><br><span class="line">--target=&lt;value&gt;        Generate code for the given target 为给定目标生成代码</span><br><span class="line">-w                      Suppress all warnings 禁用警告</span><br><span class="line">-Xclang &lt;arg&gt;           Pass &lt;arg&gt; to the clang compiler 向clang编译器传递参数</span><br></pre></td></tr></table></figure></p>
+<h4 id="常用组合命令"><a href="#常用组合命令" class="headerlink" title="常用组合命令"></a>常用组合命令</h4><ul>
+<li><p>查看编译的几个阶段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -ccc-print-phases main.m</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看预编译过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -E main.m</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看操作内部命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -### main.m -o main</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重写成C++，<a href="https://blog.csdn.net/majiakun1/article/details/52842010" target="_blank" rel="noopener">报错</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -rewrite-objc main.m</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译成可执行文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">clang -fobjc-arc -framework Foundation HelloWord.m -o HelloWord</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">-x 编译语言比如objective-c</span><br><span class="line">-arch 编译的架构，比如arm7</span><br><span class="line">-f 以-f开头的。</span><br><span class="line">-W 以-W开头的，可以通过这些定制编译警告</span><br><span class="line">-D 以-D开头的，指的是预编译宏，通过这些宏可以实现条件编译</span><br><span class="line">-iPhoneSimulator10.1.sdk 编译采用的iOS SDK版本</span><br><span class="line">-I 把编译信息写入指定的辅助文件</span><br><span class="line">-F 需要的Framework</span><br><span class="line">-c 标识符指明需要运行预处理器，语法分析，类型检查，LLVM生成优化以及汇编代码生成.o文件</span><br><span class="line">-o 编译结果</span><br><span class="line">*/</span><br><span class="line">clang -x objective-c -arch x86_64 -fmessage-length=0 -fobjc-arc… -Wno-missing-field-initializers … -DDEBUG=1 … -isysroot iPhoneSimulator10.1.sdk -fasm-blocks … -I -F -c AFSecurityPolicy.m -o AFSecurityPolicy.o</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="http://clang.llvm.org" target="_blank" rel="noopener">官网</a> </li>
+<li><a href="http://clang.llvm.org/docs/ExternalClangExamples.html" target="_blank" rel="noopener">更多clang工具</a></li>
+<li><a href="https://blog.csdn.net/snsn1984/column/info/hacking-clang" target="_blank" rel="noopener">深入研究Clang</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    jiaozhengkui@163.com
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://jiaozhengkui.top/2017/08/31/Clang笔记/" title="Clang笔记">http://jiaozhengkui.top/2017/08/31/Clang笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/20/LLVM入门/" rel="next" title="LLVM入门">
+                <i class="fa fa-chevron-left"></i> LLVM入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/31/22条商规/" rel="prev" title="22条商规">
+                22条商规 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="jiaozhengkui@163.com">
+            
+              <p class="site-author-name" itemprop="name">jiaozhengkui@163.com</p>
+              <p class="site-description motion-element" itemprop="description">焦正奎的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">132</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-number">1.</span> <span class="nav-text">1 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-AST"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 AST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-libclang"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 libclang</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-Clang-driver"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 Clang driver</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang命令（大小写敏感）"><span class="nav-number">2.</span> <span class="nav-text">Clang命令（大小写敏感）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#命令解释"><span class="nav-number">2.1.</span> <span class="nav-text">命令解释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用组合命令"><span class="nav-number">2.2.</span> <span class="nav-text">常用组合命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jiaozhengkui@163.com</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

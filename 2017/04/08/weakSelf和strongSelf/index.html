@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,原理,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;前几天水完了__block，这次水水weakself和strongself吧 1 不使用weak&amp;emsp;&amp;emsp;待测试代码12345678910@implementation Person- (void)test &amp;#123;//    __weak typeof(self) weakSelf = self;void (^myblock)(void) =  ^&amp;#1">
+<meta name="keywords" content="原创,原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="weakSelf和strongSelf">
+<meta property="og:url" content="http://jiaozhengkui.top/2017/04/08/weakSelf和strongSelf/index.html">
+<meta property="og:site_name" content="焦正奎的博客">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;前几天水完了__block，这次水水weakself和strongself吧 1 不使用weak&amp;emsp;&amp;emsp;待测试代码12345678910@implementation Person- (void)test &amp;#123;//    __weak typeof(self) weakSelf = self;void (^myblock)(void) =  ^&amp;#1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-06T14:50:00.865Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="weakSelf和strongSelf">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;前几天水完了__block，这次水水weakself和strongself吧 1 不使用weak&amp;emsp;&amp;emsp;待测试代码12345678910@implementation Person- (void)test &amp;#123;//    __weak typeof(self) weakSelf = self;void (^myblock)(void) =  ^&amp;#1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jiaozhengkui.top/2017/04/08/weakSelf和strongSelf/">
+
+
+
+
+
+  <title>weakSelf和strongSelf | 焦正奎的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">焦正奎的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jiaozhengkui.top/2017/04/08/weakSelf和strongSelf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jiaozhengkui@163.com">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="焦正奎的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">weakSelf和strongSelf</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-08T18:14:18+08:00">
+                2017-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;&emsp;前几天水完了__block，这次水水weakself和strongself吧</p>
+<h3 id="1-不使用weak"><a href="#1-不使用weak" class="headerlink" title="1 不使用weak"></a>1 不使用weak</h3><p>&emsp;&emsp;待测试代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@implementation Person</span><br><span class="line">- (void)test &#123;</span><br><span class="line">//    __weak typeof(self) weakSelf = self;</span><br><span class="line">void (^myblock)(void) =  ^&#123;</span><br><span class="line">//        __strong typeof(weakSelf)self = weakSelf;</span><br><span class="line">NSLog(@&quot;%@&quot;,weakSelf);</span><br><span class="line">&#125;;</span><br><span class="line">myblock();</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;使用clang编译命令,<a href="https://stackoverflow.com/questions/40946716/how-to-use-weak-reference-in-clang?r=SearchResults" target="_blank" rel="noopener">参考:How to use __weak reference in clang?</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -rewrite-objc -fobjc-arc -stdlib=libc++ -mmacosx-version-min=10.7 -fobjc-runtime=macosx-10.7 -Wno-deprecated-declarations keke.m</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;打开编译后cpp文件，找到@implementation  Person<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">struct __Person__test_block_impl_0 &#123;</span><br><span class="line">struct __block_impl impl;</span><br><span class="line">struct __Person__test_block_desc_0* Desc;</span><br><span class="line">Person *const __strong self;</span><br><span class="line">__Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *const __strong _self, int flags=0) : self(_self) &#123;</span><br><span class="line">impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">impl.Flags = flags;</span><br><span class="line">impl.FuncPtr = fp;</span><br><span class="line">Desc = desc;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">static void _I_Person_test(Person * self, SEL _cmd) &#123;</span><br><span class="line">void (*myblock)(void) = ((void (*)())&amp;__Person__test_block_impl_0((void *)__Person__test_block_func_0, &amp;__Person__test_block_desc_0_DATA, self, 570425344));</span><br><span class="line">((void (*)(__block_impl *))((__block_impl *)myblock)-&gt;FuncPtr)((__block_impl *)myblock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;通过编译后源码得知，不使用weak时，Block捕获self，并强持有! 这时如果self也持有Block，就会造成循环引用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person *const __strong self;</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-使用weakself"><a href="#2-使用weakself" class="headerlink" title="2 使用weakself"></a>2 使用weakself</h3><p>&emsp;&emsp;删除上面weak的注释，使用clang编译</p>
+<p>&emsp;&emsp;打开编译后cpp文件，找到@implementation  Person。找到weakself相关代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">struct __Person__test_block_impl_0 &#123;</span><br><span class="line">struct __block_impl impl;</span><br><span class="line">struct __Person__test_block_desc_0* Desc;</span><br><span class="line">Person *const __weak weakSelf;</span><br><span class="line">__Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *const __weak _weakSelf, int flags=0) : weakSelf(_weakSelf) &#123;</span><br><span class="line">impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">impl.Flags = flags;</span><br><span class="line">impl.FuncPtr = fp;</span><br><span class="line">Desc = desc;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">static void _I_Person_test(Person * self, SEL _cmd) &#123;</span><br><span class="line">__attribute__((objc_ownership(weak))) typeof(self) weakSelf = self;</span><br><span class="line">void (*myblock)(void) = ((void (*)())&amp;__Person__test_block_impl_0((void *)__Person__test_block_func_0, &amp;__Person__test_block_desc_0_DATA, weakSelf, 570425344));</span><br><span class="line">((void (*)(__block_impl *))((__block_impl *)myblock)-&gt;FuncPtr)((__block_impl *)myblock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;objc_ownership字面意思是：对象的所有权，即Block中weakSelf的所有权为weak</p>
+<h3 id="3-使用weakself，也使用strongself"><a href="#3-使用weakself，也使用strongself" class="headerlink" title="3 使用weakself，也使用strongself"></a>3 使用weakself，也使用strongself</h3><p>&emsp;&emsp;删除上面weak和strong的注释，使用clang编译</p>
+<p>&emsp;&emsp;打开编译后cpp文件，找到@implementation  Person。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">/***********这段和2 只有weak没strong时一样************/</span><br><span class="line">struct __Person__test_block_impl_0 &#123;</span><br><span class="line">struct __block_impl impl;</span><br><span class="line">struct __Person__test_block_desc_0* Desc;</span><br><span class="line">Person *const __weak weakSelf;</span><br><span class="line">__Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *const __weak _weakSelf, int flags=0) : weakSelf(_weakSelf) &#123;</span><br><span class="line">impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">impl.Flags = flags;</span><br><span class="line">impl.FuncPtr = fp;</span><br><span class="line">Desc = desc;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">static void _I_Person_test(Person * self, SEL _cmd) &#123;</span><br><span class="line">__attribute__((objc_ownership(weak))) typeof(self) weakSelf = self;</span><br><span class="line">void (*myblock)(void) = ((void (*)())&amp;__Person__test_block_impl_0((void *)__Person__test_block_func_0, &amp;__Person__test_block_desc_0_DATA, weakSelf, 570425344));</span><br><span class="line">((void (*)(__block_impl *))((__block_impl *)myblock)-&gt;FuncPtr)((__block_impl *)myblock);</span><br><span class="line">&#125;</span><br><span class="line">/***********这段和2 只有weak没strong时一样************/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cself) &#123;</span><br><span class="line">Person *const __weak weakSelf = __cself-&gt;weakSelf; // bound by copy</span><br><span class="line"></span><br><span class="line">__attribute__((objc_ownership(strong))) typeof(weakSelf)self = weakSelf;</span><br><span class="line">NSLog((NSString *)&amp;__NSConstantStringImpl__var_folders_gb__20zxxjd0p318c5gng983b6r0000gp_T_person_883428_mi_0,self);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;综上Block捕获self时是weak的，这样能打破循环引用，在Block函数内部又对self声明所有权为strong，此时strongself的生命周期同Block函数生命周期一直，保证了在Black函数内部self是存在的</p>
+<h3 id="4-weakself是不是必须的？"><a href="#4-weakself是不是必须的？" class="headerlink" title="4 weakself是不是必须的？"></a>4 weakself是不是必须的？</h3><p>&emsp;&emsp;先献上大神的文章： <a href="https://github.com/ChenYilong/iOSBlog/issues/4" target="_blank" rel="noopener">使用 Heap-Stack Dance 替代 Weak-Strong Dance，优雅避开循环引用</a></p>
+<p>&emsp;&emsp;原理：利用了“参数”的特性：参数是存放在栈中的(或寄存器中)，系统负责回收，开发者无需关心。因为解决问题的思路是：将 block 会捕获变量到堆上的问题，化解为了：变量会被分配到栈(或寄存器中)上</p>
+<p>&emsp;&emsp;实现方法就是：把self当做参数手动传给block，而不是通过Block的被动去捕获self</p>
+<p>&emsp;&emsp;其实我们一直在用只是没有注意到，例如FMDB里<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)inDatabase:(__attribute__((noescape)) void (^)(FMDatabase *db))block;</span><br><span class="line"></span><br><span class="line">- (void)inTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block;</span><br><span class="line"></span><br><span class="line">- (void)inDeferredTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block;</span><br><span class="line"></span><br><span class="line">- (void)inExclusiveTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block;</span><br><span class="line"></span><br><span class="line">- (void)inImmediateTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-weakify和-strongify"><a href="#5-weakify和-strongify" class="headerlink" title="5 @weakify和@strongify"></a>5 @weakify和@strongify</h3><p>&emsp;&emsp;写到weakself就不得不提到RAC的@weakify和@strongify！说来惭愧，接触RAC很长一段时间了，源码也研究过一些！但始终也没写出点什么！整体框架太大，写不了！细节又太小，又不想写……</p>
+<p>&emsp;&emsp;先看看一般情况下怎么写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define BBWeakSelf(type)    __weak typeof(type) weak##type = type</span><br><span class="line">#define BBStrongSelf(type)  __strong typeof(type) type = weak##type</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;是不是很lou？现在打开RACEXTScope.h文件，找到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#define weakify(...) \</span><br><span class="line">rac_keywordify \</span><br><span class="line">metamacro_foreach_cxt(rac_weakify_,, __weak, __VA_ARGS__)</span><br><span class="line"></span><br><span class="line">#define strongify(...) \</span><br><span class="line">rac_keywordify \</span><br><span class="line">_Pragma(&quot;clang diagnostic push&quot;) \</span><br><span class="line">_Pragma(&quot;clang diagnostic ignored \&quot;-Wshadow\&quot;&quot;) \</span><br><span class="line">metamacro_foreach(rac_strongify_,, __VA_ARGS__) \</span><br><span class="line">_Pragma(&quot;clang diagnostic pop&quot;)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;先看rac_keywordify，作用是添加@符号，这也是比BBWeakSelf牛逼的不止一点点！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Details about the choice of backing keyword:</span><br><span class="line">//</span><br><span class="line">// The use of @try/@catch/@finally can cause the compiler to suppress</span><br><span class="line">// return-type warnings.</span><br><span class="line">// The use of @autoreleasepool &#123;&#125; is not optimized away by the compiler,</span><br><span class="line">// resulting in superfluous creation of autorelease pools.</span><br><span class="line">//</span><br><span class="line">// Since neither option is perfect, and with no other alternatives, the</span><br><span class="line">// compromise is to use @autorelease in DEBUG builds to maintain compiler</span><br><span class="line">// analysis, and to use @try/@catch otherwise to avoid insertion of unnecessary</span><br><span class="line">// autorelease pools.</span><br><span class="line">#if DEBUG</span><br><span class="line">#define rac_keywordify autoreleasepool &#123;&#125;</span><br><span class="line">#else</span><br><span class="line">#define rac_keywordify try &#123;&#125; @catch (...) &#123;&#125;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;metamacro_foreach最后也是调的metamacro_foreach_cxt，点到最后发现是 A ## B ， ## 是宏连接符，会将 ## 左右两边连接起来，整体替换下来是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">autoreleasepool &#123;&#125;</span><br><span class="line">metamacro_foreach_cxt1(rac_weakify_,  , __weak, self)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;接着看rac_weakify_是怎么回事<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#define rac_weakify_(INDEX, CONTEXT, VAR) \</span><br><span class="line">CONTEXT __typeof__(VAR) metamacro_concat(VAR, _weak_) = (VAR);</span><br><span class="line"></span><br><span class="line">#define rac_strongify_(INDEX, VAR) \</span><br><span class="line">__strong __typeof__(VAR) VAR = metamacro_concat(VAR, _weak_);</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;最终替换成如下代码，和编译后的<strong>weak和</strong>strong几乎一模一样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@autoreleasepool &#123;&#125; __attribute__((objc_ownership(weak))) __typeof__(self) self_weak_ = (self);</span><br><span class="line"></span><br><span class="line">@autoreleasepool &#123;&#125; __attribute__((objc_ownership(strong))) __typeof__(self) self = self_weak_;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;折腾这么一大圈的原因是@weakify(…);可以支持最多20个参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* For each consecutive variadic argument (up to twenty)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;参考：<a href="http://www.cocoachina.com/articles/17303" target="_blank" rel="noopener">剖析RAC中的@weakify、@strongify</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    jiaozhengkui@163.com
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://jiaozhengkui.top/2017/04/08/weakSelf和strongSelf/" title="weakSelf和strongSelf">http://jiaozhengkui.top/2017/04/08/weakSelf和strongSelf/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/原理/" rel="tag"><i class="fa fa-tag"></i> 原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/02/block/" rel="next" title="__block">
+                <i class="fa fa-chevron-left"></i> __block
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/21/耗电量优化/" rel="prev" title="耗电量优化">
+                耗电量优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="jiaozhengkui@163.com">
+            
+              <p class="site-author-name" itemprop="name">jiaozhengkui@163.com</p>
+              <p class="site-description motion-element" itemprop="description">焦正奎的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">132</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-不使用weak"><span class="nav-number">1.</span> <span class="nav-text">1 不使用weak</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用weakself"><span class="nav-number">2.</span> <span class="nav-text">2 使用weakself</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-使用weakself，也使用strongself"><span class="nav-number">3.</span> <span class="nav-text">3 使用weakself，也使用strongself</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-weakself是不是必须的？"><span class="nav-number">4.</span> <span class="nav-text">4 weakself是不是必须的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-weakify和-strongify"><span class="nav-number">5.</span> <span class="nav-text">5 @weakify和@strongify</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jiaozhengkui@163.com</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

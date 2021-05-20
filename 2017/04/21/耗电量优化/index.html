@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,性能,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 测试1.1 测试方法&amp;emsp;&amp;emsp;检测耗电量的方法还是比较多的，对于我们而言Instrument检测基本上已经满足我们的耗电量检测需求！具体方法可参考iOS 常见耗电量检测方案调研！对于耗电浪有精准检测要求的，推荐阅读iOS 电量测试实践 1.2 测试范围 机型：iphone se、iphone 6 Plus 和 iPhone X 系统：iOS9、iOS11、iOS12  2 实践2">
+<meta name="keywords" content="原创,性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="耗电量优化">
+<meta property="og:url" content="http://jiaozhengkui.top/2017/04/21/耗电量优化/index.html">
+<meta property="og:site_name" content="焦正奎的博客">
+<meta property="og:description" content="1 测试1.1 测试方法&amp;emsp;&amp;emsp;检测耗电量的方法还是比较多的，对于我们而言Instrument检测基本上已经满足我们的耗电量检测需求！具体方法可参考iOS 常见耗电量检测方案调研！对于耗电浪有精准检测要求的，推荐阅读iOS 电量测试实践 1.2 测试范围 机型：iphone se、iphone 6 Plus 和 iPhone X 系统：iOS9、iOS11、iOS12  2 实践2">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-07-30T15:02:09.515Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="耗电量优化">
+<meta name="twitter:description" content="1 测试1.1 测试方法&amp;emsp;&amp;emsp;检测耗电量的方法还是比较多的，对于我们而言Instrument检测基本上已经满足我们的耗电量检测需求！具体方法可参考iOS 常见耗电量检测方案调研！对于耗电浪有精准检测要求的，推荐阅读iOS 电量测试实践 1.2 测试范围 机型：iphone se、iphone 6 Plus 和 iPhone X 系统：iOS9、iOS11、iOS12  2 实践2">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jiaozhengkui.top/2017/04/21/耗电量优化/">
+
+
+
+
+
+  <title>耗电量优化 | 焦正奎的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">焦正奎的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jiaozhengkui.top/2017/04/21/耗电量优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jiaozhengkui@163.com">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="焦正奎的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">耗电量优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T18:14:18+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-测试"><a href="#1-测试" class="headerlink" title="1 测试"></a>1 测试</h3><h4 id="1-1-测试方法"><a href="#1-1-测试方法" class="headerlink" title="1.1 测试方法"></a>1.1 测试方法</h4><p>&emsp;&emsp;检测耗电量的方法还是比较多的，对于我们而言Instrument检测基本上已经满足我们的耗电量检测需求！具体方法可参考<a href="https://github.com/ChenYilong/iOSBlog/issues/10" target="_blank" rel="noopener">iOS 常见耗电量检测方案调研</a>！对于耗电浪有精准检测要求的，推荐阅读<a href="https://cloud.tencent.com/developer/article/1006222" target="_blank" rel="noopener">iOS 电量测试实践</a></p>
+<h4 id="1-2-测试范围"><a href="#1-2-测试范围" class="headerlink" title="1.2 测试范围"></a>1.2 测试范围</h4><ul>
+<li>机型：iphone se、iphone 6 Plus 和 iPhone X</li>
+<li>系统：iOS9、iOS11、iOS12</li>
+</ul>
+<h3 id="2-实践"><a href="#2-实践" class="headerlink" title="2 实践"></a>2 实践</h3><h4 id="2-1-定位"><a href="#2-1-定位" class="headerlink" title="2.1 定位"></a>2.1 定位</h4><p>&emsp;&emsp;对于我们而言，定位服务甚至不是必须的！只是一些三方SDK要求提供定位服务，才不得不请求定位权限。鉴于我们的实际使用情况</p>
+<ol>
+<li>限制定位请求只请求一次：去掉后台定位请求、获取位置成功后保存位置并关闭定位</li>
+<li>降低定位精度：设定位精度desiredAccuracy为kCLLocationAccuracyKilometer，距离过滤器distanceFilter为1000</li>
+</ol>
+<h4 id="2-2-陀螺仪"><a href="#2-2-陀螺仪" class="headerlink" title="2.2 陀螺仪"></a>2.2 陀螺仪</h4><p>&emsp;&emsp;很早之前做了一个摇一摇的摇钱树功能！检测用户摇晃几次之后可以抽奖！经沟通已取消相关功能，最主要是不摇晃，直接点击也能抽奖…</p>
+<h4 id="2-3-网络"><a href="#2-3-网络" class="headerlink" title="2.3 网络"></a>2.3 网络</h4><p>&emsp;&emsp;默认网络硬件，比如蜂窝数据和Wi-Fi是不通电的。为了执行网络操作，这些资源必须通电，并持续一段时间保活。零散的网络传输会导致很高的间接能耗，迅速消耗电池电量</p>
+<p>&emsp;&emsp;我们的APP存在的主要问题是频繁请求接口数据、每次请求接口都检测一下网络状态、缓存只在第一次启动时生效以及没有断点续传功能</p>
+<h5 id="2-3-1-减少请求频次"><a href="#2-3-1-减少请求频次" class="headerlink" title="2.3.1 减少请求频次"></a>2.3.1 减少请求频次</h5><p>&emsp;&emsp;不得不吐槽PM对客户端请求频次一直耿耿于怀，恨不得所有接口都要加个轮训，甚至要求打点信息一条一条的发，以减少漏点情况；这么高频次的请求，已经严重影响到APP的耗电：解决方案主要有：</p>
+<ol>
+<li>在base库（对NSUrlsession的简单封装）里增加请求没回之前放弃本次请求（根据URL判断）的逻辑；</li>
+<li>增加接口返回数据md5校验，如果两次接口返回数据相同，则延长相同接口请求的时间间隔，最长不超过1分钟！(现被放弃了，PM连1分钟都不能忍！让PM出白名单或接口分级，他们也不想做)</li>
+<li>调整打点系统策略，将默认单条日志就post一下 + 无网写入文件的策略，调整为默认写入文件压缩后发送 + 单条日志发送开关控制</li>
+</ol>
+<h5 id="2-3-2-合并请求"><a href="#2-3-2-合并请求" class="headerlink" title="2.3.2 合并请求"></a>2.3.2 合并请求</h5><p>&emsp;&emsp;把普通广告弹窗和alert广告弹窗合并，这两个弹窗具有及其相似的请求频率和业务逻辑，完全可以合并！类似的还有一些配置小接口也合并成大接口</p>
+<h5 id="2-3-3-减少网络监测"><a href="#2-3-3-减少网络监测" class="headerlink" title="2.3.3 减少网络监测"></a>2.3.3 减少网络监测</h5><p>&emsp;&emsp;原来每次请求接口时，都会调用一个类似Reachability的自己写的库，用于监测当前网络！这完全是不合理也不必要的，改用监听Reachability通知并设置标志位的方式来减少网络状态检测</p>
+<h4 id="2-4-IO操作"><a href="#2-4-IO操作" class="headerlink" title="2.4 IO操作"></a>2.4 IO操作</h4><p>&emsp;&emsp;我们这高频IO操作主要集中在cache缓存、配置文件、日志、NSUserDefaults的滥用和Data方式取图片</p>
+<h5 id="2-4-1-cache缓存"><a href="#2-4-1-cache缓存" class="headerlink" title="2.4.1 cache缓存"></a>2.4.1 cache缓存</h5><ul>
+<li>读写在减少网络请求频次时已经得到了很好的解决，但还有优化空间！原来我们采用的是YYCache，但YYCache可能莫名其妙的缓存就清掉了，我们怀疑是sqlite没有正常关闭造成的，但我们没有证据，因为无论是断点还是打log都没抓到”现场“，无奈之下只能将一小部分核心缓存改成手动存储，但由于当时只是作为临时方：案每次接口返回都直接更新本地缓存，渐渐的变成了永久方案。因只是部分核心数据，数据量以及涉及面较小，此次方案为：内存保存当退出或内存警告时再写入硬盘</li>
+</ul>
+<h5 id="2-4-2-配置文件问题。"><a href="#2-4-2-配置文件问题。" class="headerlink" title="2.4.2 配置文件问题。"></a>2.4.2 配置文件问题。</h5><p>&emsp;&emsp;首先统计读写配置文件的频次将高频的筛选出来，然后根据配置文件的标签：只读或读写，进一步细分。</p>
+<ul>
+<li>高频只读文件比较简单：内存保存、收到内存警告再清除内存；</li>
+<li>高频读写配置文件还要细分，</li>
+<li>对于读少写多的文件：内存处理、集中保存；</li>
+<li>对于读多写少的文件，我们没有处理!</li>
+</ul>
+<h5 id="2-4-3-打点日志"><a href="#2-4-3-打点日志" class="headerlink" title="2.4.3 打点日志"></a>2.4.3 打点日志</h5><p>&emsp;&emsp;流程：open file -&gt; 写入日志 -&gt; &gt;50条 -&gt; 关闭文件 -&gt; 取出文件Data -&gt; zip -&gt; 取出zip文件Data -&gt; ase加密 -&gt; 存储。通过流程我们可以发现：</p>
+<ul>
+<li>1、日志文件可以不创建，直接使用内存记录，转Data直接塞到zip里即可</li>
+<li>2、压缩后的文件加密移至低级线程集中单独处理（这里原来有个大bug：竟然每写一条日志就检查一下当前文件夹里是否有未压缩的文件，如果有就压缩，压缩是否加密，没加密就加密）</li>
+</ul>
+<h5 id="2-4-4-NSUserDefaults的滥用"><a href="#2-4-4-NSUserDefaults的滥用" class="headerlink" title="2.4.4 NSUserDefaults的滥用"></a>2.4.4 NSUserDefaults的滥用</h5><p>&emsp;&emsp;主要体现在滥用synchronize，这个没啥可说的！NSUserDefault的数据不太敢动，只能在synchronize上做做文章了</p>
+<h5 id="2-4-5-Data方式取图片"><a href="#2-4-5-Data方式取图片" class="headerlink" title="2.4.5 Data方式取图片"></a>2.4.5 Data方式取图片</h5><p>&emsp;&emsp;比较试用的是单独用一次的大图片！对于频繁实用的小图还是用imageNamed比较好，不过需要注意的是如果需要异步读取图片必须用Data方式</p>
+<h4 id="2-5-定时器"><a href="#2-5-定时器" class="headerlink" title="2.5 定时器"></a>2.5 定时器</h4><p>&emsp;&emsp;定时器也是耗电大户，我们定时器问题主要是轮播组件以及轮训</p>
+<ul>
+<li>轮播组件：检测当前Cell是否在屏幕上，如果没在屏幕停止轮播，切换回屏幕再重新启动</li>
+<li>轮训：合并轮训定时器，减少定时器数量</li>
+</ul>
+<h4 id="2-6-视图"><a href="#2-6-视图" class="headerlink" title="2.6 视图"></a>2.6 视图</h4><p>&emsp;&emsp;其实绝大多数视图问题都和流畅度、卡顿相关！以后可以专门写个卡顿的水文，这里就说跟耗电量相关的问题！</p>
+<ul>
+<li>1、使用局部刷新、避免频繁刷新！</li>
+<li>2、减少图片拉伸</li>
+<li>3、减少动画</li>
+<li>4、布局时减少浮点数的计算</li>
+</ul>
+<h3 id="3-低电量模式"><a href="#3-低电量模式" class="headerlink" title="3 低电量模式"></a>3 低电量模式</h3><p>&emsp;&emsp;iOS9之后，iPhone增加了低电量模式，用户如果希望延长iPhone电池的寿命，可以在设置 &gt; 电池中开启该功能。开启该功能之后iOS会采取一些措施，比如：</p>
+<ol>
+<li>降低CPU和GPU性能</li>
+<li>暂停随意的和后台的活动，包括网络</li>
+<li>降低屏幕亮度</li>
+<li>缩短自动锁屏时间</li>
+<li>关闭邮件刷新</li>
+<li>关闭视角缩放</li>
+<li>关闭动态壁纸</li>
+</ol>
+<p>&emsp;&emsp;可以通过向NSNotificationCenter注册NSProcessInfoPowerStateDidChangeNotification通知监听低电量模式状态。我们APP在接收到低电量通知时就干了一件事：把内存数据存储到本地</p>
+<h3 id="4-监控"><a href="#4-监控" class="headerlink" title="4 监控"></a>4 监控</h3><p>&emsp;&emsp;监控电池的状态有助于我们在不同电池状态下做更多的操作！据闻Uber就是检测到电池电量比较低时提高运单价格，因为手机快没电的还在叫车，那才叫真的刚需呀！其实监控电池状态对于我们而言只有两个作用：1、上文提到低电量存本地策略；2、生产和PM撕逼的证据：别老没事就说我们APP耗电，下载电影电视剧的耗电可不能算在我们头上</p>
+<h4 id="4-1-方案"><a href="#4-1-方案" class="headerlink" title="4.1 方案"></a>4.1 方案</h4><p>&emsp;&emsp;我们采用的是UIDevice类batteryLevel接口，虽然采样只能精确到 1%，但已经足够满足我们的需求！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark 电池</span><br><span class="line">// 电池电量，ios8前只能精确动5%，以后可精确到1%</span><br><span class="line">+ (float)batteryLevel &#123;</span><br><span class="line">UIDevice *device = [UIDevice currentDevice];</span><br><span class="line">device.batteryMonitoringEnabled = YES;</span><br><span class="line">if (device.batteryLevel &gt; 0.0f) &#123;</span><br><span class="line">return device.batteryLevel * 100 ;</span><br><span class="line">&#125;</span><br><span class="line">return -1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 电池状态：充电中、满电等</span><br><span class="line">+ (UIDeviceBatteryState)batteryState &#123;</span><br><span class="line">UIDevice *device = [UIDevice currentDevice];</span><br><span class="line">device.batteryMonitoringEnabled = YES;</span><br><span class="line">return device.batteryState;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 电池是否在充电</span><br><span class="line">+ (BOOL)isBatteryCharing &#123;</span><br><span class="line">UIDeviceBatteryState state = [[self class] batteryState];</span><br><span class="line">if (state == UIDeviceBatteryStateCharging) &#123;</span><br><span class="line">return YES;</span><br><span class="line">&#125;</span><br><span class="line">return NO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 电池是否满电</span><br><span class="line">+ (BOOL)isBatteryFull &#123;</span><br><span class="line">UIDeviceBatteryState state = [[self class] batteryState];</span><br><span class="line">if (state == UIDeviceBatteryStateFull) &#123;</span><br><span class="line">return YES;</span><br><span class="line">&#125;</span><br><span class="line">return NO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 当前电量是否大于给定阀值，耗电量优化时可用</span><br><span class="line">+ (BOOL)shouldProceedWithMinLevel:(NSUInteger)minLevel &#123;</span><br><span class="line">// 充电或满电</span><br><span class="line">if ([[self class] isBatteryCharing] || [[self class] isBatteryFull]) &#123;</span><br><span class="line">return YES;</span><br><span class="line">&#125;</span><br><span class="line">NSUInteger batteryLevel = (NSUInteger)[[self class] batteryLevel];</span><br><span class="line">if (batteryLevel &gt;= minLevel) &#123;</span><br><span class="line">return YES;</span><br><span class="line">&#125;</span><br><span class="line">return NO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://www.jianshu.com/p/9a5e94e7b7c3" target="_blank" rel="noopener">https://www.jianshu.com/p/9a5e94e7b7c3</a></li>
+<li><a href="https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/" target="_blank" rel="noopener">https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    jiaozhengkui@163.com
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://jiaozhengkui.top/2017/04/21/耗电量优化/" title="耗电量优化">http://jiaozhengkui.top/2017/04/21/耗电量优化/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/性能/" rel="tag"><i class="fa fa-tag"></i> 性能</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/08/weakSelf和strongSelf/" rel="next" title="weakSelf和strongSelf">
+                <i class="fa fa-chevron-left"></i> weakSelf和strongSelf
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/26/weak源码/" rel="prev" title="weak源码">
+                weak源码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="jiaozhengkui@163.com">
+            
+              <p class="site-author-name" itemprop="name">jiaozhengkui@163.com</p>
+              <p class="site-description motion-element" itemprop="description">焦正奎的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">132</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-测试"><span class="nav-number">1.</span> <span class="nav-text">1 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-测试方法"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 测试方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-测试范围"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 测试范围</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-实践"><span class="nav-number">2.</span> <span class="nav-text">2 实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-定位"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 定位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-陀螺仪"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 陀螺仪</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-网络"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 网络</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-1-减少请求频次"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.3.1 减少请求频次</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-2-合并请求"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.3.2 合并请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-3-减少网络监测"><span class="nav-number">2.3.3.</span> <span class="nav-text">2.3.3 减少网络监测</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-IO操作"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 IO操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4-1-cache缓存"><span class="nav-number">2.4.1.</span> <span class="nav-text">2.4.1 cache缓存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4-2-配置文件问题。"><span class="nav-number">2.4.2.</span> <span class="nav-text">2.4.2 配置文件问题。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4-3-打点日志"><span class="nav-number">2.4.3.</span> <span class="nav-text">2.4.3 打点日志</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4-4-NSUserDefaults的滥用"><span class="nav-number">2.4.4.</span> <span class="nav-text">2.4.4 NSUserDefaults的滥用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4-5-Data方式取图片"><span class="nav-number">2.4.5.</span> <span class="nav-text">2.4.5 Data方式取图片</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-定时器"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 定时器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-视图"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 视图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-低电量模式"><span class="nav-number">3.</span> <span class="nav-text">3 低电量模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-监控"><span class="nav-number">4.</span> <span class="nav-text">4 监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-方案"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jiaozhengkui@163.com</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

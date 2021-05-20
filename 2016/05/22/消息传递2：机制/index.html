@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;刚学OC时水过一次为啥叫消息发送，具体就不贴了！看了看实在是水的不行！前些天专门写了点消息发送的方式以及注意事项！今天就水一水，消息发送的机制是什么 1 动态绑定VS静态绑定1.1 静态绑定-就是编译时已经写死了调用函数，硬编码的，不会变1234567891011121314151617181920/***********  例1 静态绑定   ***********/#i">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="消息传递2：机制">
+<meta property="og:url" content="http://jiaozhengkui.top/2016/05/22/消息传递2：机制/index.html">
+<meta property="og:site_name" content="焦正奎的博客">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;刚学OC时水过一次为啥叫消息发送，具体就不贴了！看了看实在是水的不行！前些天专门写了点消息发送的方式以及注意事项！今天就水一水，消息发送的机制是什么 1 动态绑定VS静态绑定1.1 静态绑定-就是编译时已经写死了调用函数，硬编码的，不会变1234567891011121314151617181920/***********  例1 静态绑定   ***********/#i">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-03T17:35:00.298Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="消息传递2：机制">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;刚学OC时水过一次为啥叫消息发送，具体就不贴了！看了看实在是水的不行！前些天专门写了点消息发送的方式以及注意事项！今天就水一水，消息发送的机制是什么 1 动态绑定VS静态绑定1.1 静态绑定-就是编译时已经写死了调用函数，硬编码的，不会变1234567891011121314151617181920/***********  例1 静态绑定   ***********/#i">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jiaozhengkui.top/2016/05/22/消息传递2：机制/">
+
+
+
+
+
+  <title>消息传递2：机制 | 焦正奎的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">焦正奎的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jiaozhengkui.top/2016/05/22/消息传递2：机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jiaozhengkui@163.com">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="焦正奎的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">消息传递2：机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-22T18:14:18+08:00">
+                2016-05-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;&emsp;刚学OC时水过一次为啥叫消息发送，具体就不贴了！看了看实在是水的不行！前些天专门写了点消息发送的方式以及注意事项！今天就水一水，消息发送的机制是什么</p>
+<h3 id="1-动态绑定VS静态绑定"><a href="#1-动态绑定VS静态绑定" class="headerlink" title="1 动态绑定VS静态绑定"></a>1 动态绑定VS静态绑定</h3><h4 id="1-1-静态绑定"><a href="#1-1-静态绑定" class="headerlink" title="1.1 静态绑定"></a>1.1 静态绑定</h4><p>-就是编译时已经写死了调用函数，硬编码的，不会变<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/***********  例1 静态绑定   ***********/</span><br><span class="line">#import &lt;stdio.h&gt;</span><br><span class="line">void printHello() &#123;</span><br><span class="line">printf(&quot;Hello, world!\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">void printGoodbye() &#123;</span><br><span class="line">printf(&quot;Goodbye, world!\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">void saySomething(int type) &#123;</span><br><span class="line">/*</span><br><span class="line">重点不是if，而是写死的printHello();和printGoodbye();</span><br><span class="line">这两个函数在编译时已经硬编码进了程序，是不会改变的</span><br><span class="line">*/ </span><br><span class="line">if (type == 0) &#123;</span><br><span class="line">printHello();</span><br><span class="line">&#125; else &#123;</span><br><span class="line">printGoodbye();</span><br><span class="line">&#125;</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-2-动态绑定"><a href="#1-2-动态绑定" class="headerlink" title="1.2 动态绑定"></a>1.2 动态绑定</h4><ul>
+<li>是运行时再绑定实际的调用函数，OC就是通过消息传递的方式来动态绑定的<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/***********  例2 动态绑定   ***********/</span><br><span class="line">#import &lt;stdio.h&gt;</span><br><span class="line">void printHello() &#123;</span><br><span class="line">printf(&quot;Hello, world!\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">void printGoodbye() &#123;</span><br><span class="line">printf(&quot;Goodbye, world!\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">void saySomething(int type)  &#123;</span><br><span class="line">/*</span><br><span class="line">通过函数指针的方式调用printHello();和printGoodbye();函数将具体调用哪个函数推迟到了运行时再确定，我们可修改函数指针指向一个printLog();函数来实现动态效果，而不需要修改硬编码</span><br><span class="line">*/ </span><br><span class="line">void (*func)();</span><br><span class="line">if (type == 0) &#123;</span><br><span class="line">func = printHello;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">func = printGoodbye;</span><br><span class="line">&#125;</span><br><span class="line">func();</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="1-3-PS-函数指针和指针函数"><a href="#1-3-PS-函数指针和指针函数" class="headerlink" title="1.3 PS:函数指针和指针函数"></a>1.3 PS:函数指针和指针函数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 函数指针：函数的指针</span><br><span class="line">int (*fun)(int x,int y);</span><br><span class="line">// 指针函数：指针两字在前面，所以返回值是指针</span><br><span class="line">int * fun(int x,int y)；</span><br></pre></td></tr></table></figure>
+<h3 id="2-objc-msgSend"><a href="#2-objc-msgSend" class="headerlink" title="2 objc_msgSend"></a>2 objc_msgSend</h3><h4 id="2-1-向某个OC对象发送消息"><a href="#2-1-向某个OC对象发送消息" class="headerlink" title="2.1 向某个OC对象发送消息"></a>2.1 向某个OC对象发送消息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// OC写法</span><br><span class="line">id returnValue = [someObject messageName:parameter];</span><br><span class="line">// 编译器转化为C语言调用</span><br><span class="line">id returnValue = objc_msgSend(someObject,</span><br><span class="line">@selector(messageName:),</span><br><span class="line">parameter);</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-objc-msgSend原型，"><a href="#2-2-objc-msgSend原型，" class="headerlink" title="2.2 objc_msgSend原型，"></a>2.2 objc_msgSend原型，</h4><ul>
+<li>参考: <a href="https://opensource.apple.com/source/objc4/objc4-723/runtime/Messengers.subproj/objc-msg-arm.s.auto.html" target="_blank" rel="noopener">https://opensource.apple.com/source/objc4/objc4-723/runtime/Messengers.subproj/objc-msg-arm.s.auto.html</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// self表示调用函数的实例对象</span><br><span class="line">// SEL表示调用的函数指针</span><br><span class="line">// ...表示对应的参数，支持多参数</span><br><span class="line">id objc_msgSend(id self, SEL _cmd, ...);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="3-消息传递流程"><a href="#3-消息传递流程" class="headerlink" title="3 消息传递流程"></a>3 消息传递流程</h3><h4 id="3-1-一般流程"><a href="#3-1-一般流程" class="headerlink" title="3.1 一般流程"></a>3.1 一般流程</h4><p>&emsp;&emsp;由于动态绑定需在运行时确定具体函数地址，也就存在一个查找内存地址的过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 从方法缓存里找！为啥要缓存？当时是为了加快检索速度，毕竟常用方法就那么几个，每次都遍历一遍所有方法很耗时耗性能的</span><br><span class="line">2. 从类的所有方法形成的列表里找！找到则写入缓存，方便下次查找</span><br><span class="line">3. 沿着继承链从父类类中查找</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;正常流程下，如果遍历了所有父类依然没有找到对应的方法就会Crash，并给出unrecognized selector sent to instance的Crash信息，但OC贴心的为我们提供了补救措施</p>
+<h4 id="3-2-补救措施"><a href="#3-2-补救措施" class="headerlink" title="3.2 补救措施"></a>3.2 补救措施</h4><ul>
+<li><ol>
+<li>动态方法解析，OC提供了两个方法用于处理找不到方法的情况<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// 用于解决类方法找不到的情况</span><br><span class="line">+ (BOOL)resolveClassMethod:(SEL)sel OBJC_AVAILABLE(10.5, 2.0, 9.0, 1.0, 2.0);</span><br><span class="line">// 用于解决实例方法找不到的情况</span><br><span class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel OBJC_AVAILABLE(10.5, 2.0, 9.0, 1.0, 2.0);</span><br><span class="line"></span><br><span class="line">// 示例</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">[super viewDidLoad];</span><br><span class="line"></span><br><span class="line">[self performSelector:@selector(unrecognizedSelector)];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel &#123;</span><br><span class="line"></span><br><span class="line">NSString *selectorString = NSStringFromSelector(sel);</span><br><span class="line">if ([selectorString isEqualToString:@&quot;unrecognizedSelector&quot;]) &#123;</span><br><span class="line">// 将sel的函数指针指向recognizedOtherSelector的地址</span><br><span class="line">class_addMethod(self,sel,(IMP)recognizedOtherSelector,&quot;&quot;);</span><br><span class="line"></span><br><span class="line">return YES;</span><br><span class="line">&#125;</span><br><span class="line">return NO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void recognizedOtherSelector() &#123;</span><br><span class="line">NSLog(@&quot;----&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>没有实现动态方法解析，则查看有没有备用接受者<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 其实就是找个能响应aSelector方法的替死鬼</span><br><span class="line">- (id)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">NSString *selectorString = NSStringFromSelector(aSelector);</span><br><span class="line">if ([selectorString isEqualToString:@&quot;unrecognizedSelector&quot;]) &#123;</span><br><span class="line">return @&quot;能够响应unrecognizedSelector的对象&quot;;</span><br><span class="line">&#125;</span><br><span class="line">return nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>消息转发<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">必须要覆盖两个方法在methodSignatureForSelector和forwardInvocation</span><br><span class="line"></span><br><span class="line">// 创建一个有效的签名</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector &#123;</span><br><span class="line">NSMethodSignature *signature = [super methodSignatureForSelector:aSelector];</span><br><span class="line">if (!signature) &#123;</span><br><span class="line">return [NSMethodSignature signatureWithObjCTypes:&quot;v@:@&quot;];</span><br><span class="line">&#125;</span><br><span class="line">return signature;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 转发给某个方法</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation &#123;</span><br><span class="line"></span><br><span class="line">[anInvocation setSelector:@selector(forwardTo:)];</span><br><span class="line">NSString *arg1;</span><br><span class="line">[anInvocation getArgument:&amp;arg1 atIndex:2];</span><br><span class="line">[anInvocation invokeWithTarget:self];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)forwardTo:(NSString *)arg1 &#123;</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;%@&quot;,arg1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><p>&emsp;&emsp;调用一个<code></code>objc_msgSend(id theReceiver, SEL selectot,……)`方法系统执行的步骤为:</p>
+<ol>
+<li><p>判断receiver是否为nil，如果是nil的话则不往下执行，返回nil，这就是为什么在oc中一个nil发送消息不会引起奔溃。</p>
+</li>
+<li><p>从方法的缓存中查找被调用过的方法会存在缓存里面，每个类都会有一个表来存被调用过的方法，以便下次更快的调用。</p>
+</li>
+<li><p>从本类的方法表中查找方法寻找selector，找到则写入缓存，返回方法。否则再从父类中查找方法，如此往复，直到达到基类。如果找不到则执行方法的动态解析。</p>
+</li>
+<li><p>方法的动态解析： 调用+(BOOL)resolveInstanceMethod:(SEL)sel方法来查看是否能够返回一个selector，如果存在则返回selector。不存在进入下一步。</p>
+</li>
+<li><p>备用接受者 - (id)forwardingTargetForSelector:(SEL)aSelector这个方法来询问是否有接受者可以接受这个方法呀。如果有人接受，则交给它处理，就好像一切都没发生过一样。</p>
+</li>
+<li><p>方法的转发： 如果到这一步还不能够找到相应的Selector的话，就要进行完整的方法转发过程。调用方法(void)forwardInvocation:(NSInvocation *)anInvocation</p>
+</li>
+<li><p>最后还是没有找到的话就只有呵呵了，这时候unrecognized selector sent to instance 0x100111df0’的错误就来了。</p>
+</li>
+</ol>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ul>
+<li><a href="https://www.jianshu.com/p/64ed325c1f19" target="_blank" rel="noopener">https://www.jianshu.com/p/64ed325c1f19</a></li>
+<li><a href="https://www.zybuluo.com/MicroCai/note/64270" target="_blank" rel="noopener">https://www.zybuluo.com/MicroCai/note/64270</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    jiaozhengkui@163.com
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://jiaozhengkui.top/2016/05/22/消息传递2：机制/" title="消息传递2：机制">http://jiaozhengkui.top/2016/05/22/消息传递2：机制/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/20/消息传递1：方式/" rel="next" title="消息传递1：方式">
+                <i class="fa fa-chevron-left"></i> 消息传递1：方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/12/图片处理1：常用工具/" rel="prev" title="图片处理1：常用工具">
+                图片处理1：常用工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="jiaozhengkui@163.com">
+            
+              <p class="site-author-name" itemprop="name">jiaozhengkui@163.com</p>
+              <p class="site-description motion-element" itemprop="description">焦正奎的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">132</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-动态绑定VS静态绑定"><span class="nav-number">1.</span> <span class="nav-text">1 动态绑定VS静态绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-静态绑定"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 静态绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-动态绑定"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 动态绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-PS-函数指针和指针函数"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 PS:函数指针和指针函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-objc-msgSend"><span class="nav-number">2.</span> <span class="nav-text">2 objc_msgSend</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-向某个OC对象发送消息"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 向某个OC对象发送消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-objc-msgSend原型，"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 objc_msgSend原型，</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-消息传递流程"><span class="nav-number">3.</span> <span class="nav-text">3 消息传递流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-一般流程"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 一般流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-补救措施"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 补救措施</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-number">4.</span> <span class="nav-text">4 总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考"><span class="nav-number">4.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jiaozhengkui@163.com</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="原创,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Category&amp;emsp;&amp;emsp;个人觉得Category才是OC最好玩的地方，如果不用category我们能怎么办？继承！对最好的方式就是继承，但继承的问题总所周知：层级关系复杂，使用不便，最主要的还是麻烦！category就很爽了！ 概念&amp;emsp;&amp;emsp;分类就是对一个类的功能进行扩展,利用OC的动态运行时分配机制，Category提供了一种比继承更为简洁的方法来对类进行扩展，无需">
+<meta name="keywords" content="原创,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Category和关联对象的使用">
+<meta property="og:url" content="http://jiaozhengkui.top/2015/08/02/Category和关联对象的使用/index.html">
+<meta property="og:site_name" content="焦正奎的博客">
+<meta property="og:description" content="Category&amp;emsp;&amp;emsp;个人觉得Category才是OC最好玩的地方，如果不用category我们能怎么办？继承！对最好的方式就是继承，但继承的问题总所周知：层级关系复杂，使用不便，最主要的还是麻烦！category就很爽了！ 概念&amp;emsp;&amp;emsp;分类就是对一个类的功能进行扩展,利用OC的动态运行时分配机制，Category提供了一种比继承更为简洁的方法来对类进行扩展，无需">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-03T16:36:33.720Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Category和关联对象的使用">
+<meta name="twitter:description" content="Category&amp;emsp;&amp;emsp;个人觉得Category才是OC最好玩的地方，如果不用category我们能怎么办？继承！对最好的方式就是继承，但继承的问题总所周知：层级关系复杂，使用不便，最主要的还是麻烦！category就很爽了！ 概念&amp;emsp;&amp;emsp;分类就是对一个类的功能进行扩展,利用OC的动态运行时分配机制，Category提供了一种比继承更为简洁的方法来对类进行扩展，无需">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jiaozhengkui.top/2015/08/02/Category和关联对象的使用/">
+
+
+
+
+
+  <title>Category和关联对象的使用 | 焦正奎的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">焦正奎的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不要怕！不要悔！慢慢来！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jiaozhengkui.top/2015/08/02/Category和关联对象的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jiaozhengkui@163.com">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="焦正奎的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Category和关联对象的使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-02T18:14:18+08:00">
+                2015-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h3><p>&emsp;&emsp;个人觉得Category才是OC最好玩的地方，如果不用category我们能怎么办？继承！对最好的方式就是继承，但继承的问题总所周知：层级关系复杂，使用不便，最主要的还是麻烦！category就很爽了！</p>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>&emsp;&emsp;分类就是对一个类的功能进行扩展,利用OC的动态运行时分配机制，Category提供了一种比继承更为简洁的方法来对类进行扩展，无需创建对象类的子类就能为现有的类添加新的方法，可以为任何已经存在的类添加方法，包括系统框架UIKit等</p>
+<ul>
+<li>优点</li>
+<li>分散功能，可将体积比较大的类拆分成几个小类，减少依赖提高复用率</li>
+<li>方便代码的管理。将同类功能放到同一category里面是一个非常不错的选择，UIKit也是这么做的</li>
+<li>减少继承，编码核心就是能用组合用组合，实在没办法再用继承</li>
+<li>声明私有方法</li>
+<li>缺点</li>
+<li>同名方法有可能被覆盖掉！处理办法是增加前缀，注意OC里主要通过前缀来代替包，而且apple声称拥有任何两个字母的使用权，开发者最好使用三个或三个以上字母作为前缀</li>
+<li>由于功能分散，非常考验命名</li>
+<li>多人协作时，最好将同一个类的category放到同一文件夹，增加冲突可能性</li>
+</ul>
+<p>&emsp;&emsp;category和extension的区别</p>
+<ul>
+<li>extension固定为 ClassName()，外部引用不到 ； category需要起个好名字，外部能引用到</li>
+<li>extension 能直接增加成员变量， category需要借助于关联对象</li>
+<li>extension 只能在.m文件中，用于隐藏相关信息；category可单独一个文件</li>
+</ul>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>&emsp;&emsp;新建category: new file -&gt; Object-C File -&gt; File Type -&gt; Category</p>
+<h5 id="1-实例：给NSMutableArray添加安全方法"><a href="#1-实例：给NSMutableArray添加安全方法" class="headerlink" title="1. 实例：给NSMutableArray添加安全方法"></a>1. 实例：给NSMutableArray添加安全方法</h5><ul>
+<li><p>.h 文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@interface NSMutableArray (Safely)</span><br><span class="line"></span><br><span class="line">- (void)addObjectSafely:(id)anObject;</span><br><span class="line">- (void)insertObjectSafely:(id)anObject atIndex:(NSUInteger)index;</span><br><span class="line">- (void)removeObjectAtIndexSafely:(NSUInteger)index;</span><br><span class="line">- (void)replaceObjectAtIndexSafely:(NSUInteger)index withObject:(id)anObject;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>.m文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@implementation NSMutableArray (Safely)</span><br><span class="line"></span><br><span class="line">- (void)addObjectSafely:(id)anObject &#123;</span><br><span class="line">if (nil != anObject) &#123;</span><br><span class="line">[self addObject:anObject];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">- (void)insertObjectSafely:(id)anObject atIndex:(NSUInteger)index &#123;</span><br><span class="line">if (nil != anObject &amp;&amp; index &lt; [self count]) &#123;</span><br><span class="line">[self insertObject:anObject atIndex:index];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">- (void)removeObjectAtIndexSafely:(NSUInteger)index &#123;</span><br><span class="line">if (index &lt; [self count]) &#123;</span><br><span class="line">[self removeObjectAtIndex:index];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)replaceObjectAtIndexSafely:(NSUInteger)index withObject:(id)anObject &#123;</span><br><span class="line">if (nil != anObject &amp;&amp; index &lt; [self count]) &#123;</span><br><span class="line">[self replaceObjectAtIndex:index withObject:anObject];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="2-声明私有方法"><a href="#2-声明私有方法" class="headerlink" title="2. 声明私有方法"></a>2. 声明私有方法</h5><ul>
+<li><p>原文件 MyClass</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// .h文件</span><br><span class="line">@interface MyClass : NSObject</span><br><span class="line">// 注意原来类中没有暴露somePrivateMethod方法</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// .m文件</span><br><span class="line">@implementation MyClass</span><br><span class="line"></span><br><span class="line">- (void)somePrivateMethod &#123;</span><br><span class="line">NSLog(@&quot;就是不想让你用！&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>category暴露私有方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// .h文件</span><br><span class="line">@interface MyClass (Public)</span><br><span class="line">// 暴露somePrivateMethod方法，注意不要在category的m文件实现。实现就覆盖了</span><br><span class="line">- (void)somePrivateMethod;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// .m文件</span><br><span class="line">@implementation MyClass (Public)</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用私有方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 注意声明私有方法时必须两个都要引入</span><br><span class="line">#import &quot;MyClass.h&quot;</span><br><span class="line">#import &quot;MyClass+Public.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">[super viewDidLoad];</span><br><span class="line">MyClass *my = [[MyClass alloc] init];</span><br><span class="line">[my somePrivateMethod];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h3><p>&emsp;&emsp;为什么把关联对象放到这里写？因为关联对象一般都在category里；更因为category可以给原类增加方法，关联对象正好可以给原来增加实例变量，参考：<a href="https://stackoverflow.com/questions/8733104/objective-c-property-instance-variable-in-category" target="_blank" rel="noopener">https://stackoverflow.com/questions/8733104/objective-c-property-instance-variable-in-category</a></p>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><ul>
+<li><p>.h文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@interface MyClass (Public)</span><br><span class="line"></span><br><span class="line">@property (copy, nonatomic) NSString *someProperty;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>.m文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 注意引入runtime</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line"></span><br><span class="line">static NSString *kAssociatedObjectKey = @&quot;kAssociatedObjectKey&quot;;</span><br><span class="line"></span><br><span class="line">@implementation MyClass (Public)</span><br><span class="line"></span><br><span class="line">// setter和getter必须都要写</span><br><span class="line">// setter方法</span><br><span class="line">- (void)setSomeProperty:(NSString*)propertyValue &#123;</span><br><span class="line">/*</span><br><span class="line">OBJC_ASSOCIATION_ASSIGN            //@property(assign)。</span><br><span class="line">OBJC_ASSOCIATION_RETAIN_NONATOMIC  //@property(strong, nonatomic)。</span><br><span class="line">OBJC_ASSOCIATION_COPY_NONATOMIC    //@property(copy, nonatomic)。</span><br><span class="line">OBJC_ASSOCIATION_RETAIN            //@property(strong,atomic)。</span><br><span class="line">OBJC_ASSOCIATION_COPY              //@property(copy, atomic)。</span><br><span class="line">*/</span><br><span class="line">// 注意propertyValue只能给类，int、NSInterger、Bool时需要转成NSNumber</span><br><span class="line">objc_setAssociatedObject(self, &amp;kAssociatedObjectKey, propertyValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// getter</span><br><span class="line">- (NSString *)someProperty &#123;</span><br><span class="line">// int、NSInterger、Bool时需要将NSNumber转成对应类型</span><br><span class="line">NSString *value = objc_getAssociatedObject(self, &amp;kAssociatedObjectKey);</span><br><span class="line">return value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    jiaozhengkui@163.com
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://jiaozhengkui.top/2015/08/02/Category和关联对象的使用/" title="Category和关联对象的使用">http://jiaozhengkui.top/2015/08/02/Category和关联对象的使用/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原创/" rel="tag"><i class="fa fa-tag"></i> 原创</a>
+          
+            <a href="/tags/基础/" rel="tag"><i class="fa fa-tag"></i> 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/31/小强升职记/" rel="next" title="小强升职记">
+                <i class="fa fa-chevron-left"></i> 小强升职记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/17/Method-Swizzling/" rel="prev" title="Method Swizzling">
+                Method Swizzling <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.jpg" alt="jiaozhengkui@163.com">
+            
+              <p class="site-author-name" itemprop="name">jiaozhengkui@163.com</p>
+              <p class="site-description motion-element" itemprop="description">焦正奎的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">132</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Category"><span class="nav-number">1.</span> <span class="nav-text">Category</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念"><span class="nav-number">1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现"><span class="nav-number">1.2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-实例：给NSMutableArray添加安全方法"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 实例：给NSMutableArray添加安全方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-声明私有方法"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 声明私有方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联对象"><span class="nav-number">2.</span> <span class="nav-text">关联对象</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-number">2.1.</span> <span class="nav-text">实例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jiaozhengkui@163.com</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
